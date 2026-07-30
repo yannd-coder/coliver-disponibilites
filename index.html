@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Villa Coliver — Disponibilités</title>
+<style>
+  :root {
+    --green-bg: #e7f6ee; --green-tx: #0f7a43; --green-bd: #bfe6d0;
+    --busy-bg: #f1f2f4; --busy-tx: #b0b4bb;
+    --ink: #21252b; --muted: #6b7280; --accent: #0f7a43;
+    --sel: #ffb703;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--ink); background: #fafaf8; padding-bottom: 60px; }
+  header { padding: 22px 20px 6px; max-width: 1200px; margin: 0 auto; }
+  header h1 { font-size: 24px; font-weight: 700; }
+  header p { color: var(--muted); font-size: 14px; margin-top: 4px; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+  .searchbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 14px; margin-top: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
+  .field label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+  .field input { border: 1px solid #d1d5db; border-radius: 8px; padding: 8px 10px; font-size: 15px; background: #fff; }
+  .btn { border: 0; border-radius: 8px; padding: 10px 18px; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-ghost { background: transparent; color: var(--muted); text-decoration: underline; font-size: 13px; padding: 10px 6px; }
+  .legend { display: flex; gap: 16px; align-items: center; font-size: 13px; color: var(--muted); margin: 14px 2px 8px; flex-wrap: wrap; }
+  .chip { display: inline-block; width: 14px; height: 14px; border-radius: 4px; vertical-align: -2px; margin-right: 5px; }
+  .chip.free { background: var(--green-bg); border: 1px solid var(--green-bd); }
+  .chip.busy { background: var(--busy-bg); border: 1px solid #dcdfe3; }
+  .gridnav { display: flex; align-items: center; gap: 8px; margin: 10px 0 8px; }
+  .gridnav .title { font-size: 17px; font-weight: 700; text-transform: capitalize; flex: 1; }
+  .navbtn { border: 1px solid #d1d5db; background: #fff; border-radius: 8px; width: 34px; height: 34px; font-size: 16px; cursor: pointer; }
+  .todaybtn { border: 1px solid #d1d5db; background: #fff; border-radius: 8px; height: 34px; padding: 0 12px; font-size: 13px; cursor: pointer; }
+  .gridbox { overflow-x: auto; background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
+  table.cal { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 100%; }
+  table.cal th, table.cal td { border-bottom: 1px solid #eef0f2; }
+  th.room, td.room { position: sticky; left: 0; background: #fff; z-index: 2; text-align: left; padding: 8px 12px; min-width: 150px; max-width: 190px; border-right: 1px solid #e5e7eb; }
+  td.room .code { font-weight: 700; font-size: 14px; }
+  td.room .kind { font-size: 11.5px; color: var(--muted); }
+  td.room a { font-size: 11.5px; color: var(--accent); }
+  th.day { font-size: 11px; color: var(--muted); font-weight: 500; padding: 6px 0 5px; min-width: 38px; text-align: center; }
+  th.day .num { display: block; font-size: 14px; font-weight: 700; color: var(--ink); }
+  th.day.we { background: #fbf8f1; }
+  th.day.today .num { color: var(--accent); }
+  th.month { text-align: left; font-size: 12px; color: var(--accent); font-weight: 700; padding: 6px 4px 0; text-transform: capitalize; }
+  td.c { min-width: 38px; height: 44px; text-align: center; font-size: 11px; padding: 0; }
+  td.c.free { background: var(--green-bg); color: var(--green-tx); font-weight: 600; }
+  td.c.busy { background: repeating-linear-gradient(45deg, var(--busy-bg), var(--busy-bg) 5px, #e8eaed 5px, #e8eaed 10px); }
+  td.c.sel { outline: 2px solid var(--sel); outline-offset: -2px; }
+  td.c.we.free { background: #ddf1e6; }
+  #results { margin-top: 20px; }
+  .rescard { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
+  .rescard h3 { font-size: 16px; margin-bottom: 10px; }
+  .optline { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 0; border-top: 1px solid #f0f1f3; }
+  .optline:first-of-type { border-top: 0; }
+  .seg { background: var(--green-bg); color: var(--green-tx); border: 1px solid var(--green-bd); border-radius: 8px; padding: 5px 10px; font-size: 13px; font-weight: 600; }
+  .arrow { color: var(--muted); }
+  .tot { margin-left: auto; font-weight: 700; font-size: 14px; white-space: nowrap; }
+  .tot small { color: var(--muted); font-weight: 500; }
+  .book { background: var(--accent); color: #fff; border-radius: 8px; padding: 6px 12px; font-size: 13px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+  .note { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .empty { color: var(--muted); font-size: 14px; }
+  #status { font-size: 13px; color: var(--muted); margin: 8px 2px; }
+  .err { color: #b42318; }
+  @media (max-width: 640px) {
+    header h1 { font-size: 20px; }
+    .searchbar { padding: 10px; }
+    th.room, td.room { min-width: 110px; max-width: 130px; padding: 6px 8px; }
+    td.room .kind { display: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Villa Coliver — Disponibilités</h1>
+  <p>Choisissez vos dates : nous vous montrons les logements libres, et les combinaisons possibles si aucun logement n'est libre sur toute la période.</p>
+</header>
+<div class="wrap">
+  <div class="searchbar">
+    <div class="field"><label for="din">Arrivée</label><input type="date" id="din"></div>
+    <div class="field"><label for="dout">Départ</label><input type="date" id="dout"></div>
+    <button class="btn btn-primary" id="go">Voir les disponibilités</button>
+    <button class="btn btn-ghost" id="clear" style="display:none">Effacer</button>
+  </div>
+  <div id="results"></div>
+  <div class="legend">
+    <span><span class="chip free"></span>Disponible (prix / nuit)</span>
+    <span><span class="chip busy"></span>Occupé</span>
+  </div>
+  <div class="gridnav">
+    <div class="title" id="gridtitle"></div>
+    <button class="todaybtn" id="tod">Aujourd'hui</button>
+    <button class="navbtn" id="prev">&#8249;</button>
+    <button class="navbtn" id="next">&#8250;</button>
+  </div>
+  <div class="gridbox"><table class="cal" id="cal"></table></div>
+  <div id="status"></div>
+</div>
+<script>
+(function () {
+  var BASE = "https://flqjaqocsugwbkbiuhhk.supabase.co/functions/v1/lodgify-calendar";
+  var VISIBLE = 31;        // jours affichés dans la grille
+  var store = { props: [], daysById: {} };
+  var viewStart = todayStr();
+  var selection = null;    // {a, d} dates ISO
+
+  function todayStr() {
+    var n = new Date();
+    return n.getFullYear() + "-" + p2(n.getMonth() + 1) + "-" + p2(n.getDate());
+  }
+  function p2(x) { return (x < 10 ? "0" : "") + x; }
+  function addDays(iso, n) {
+    var d = new Date(iso + "T00:00:00Z");
+    d.setUTCDate(d.getUTCDate() + n);
+    return d.toISOString().slice(0, 10);
+  }
+  function listDays(a, b) { // [a, b) exclusif
+    var out = [], c = a;
+    while (c < b) { out.push(c); c = addDays(c, 1); }
+    return out;
+  }
+  var FR_D = ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."];
+  var FR_M = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+  function dow(iso) { return new Date(iso + "T00:00:00Z").getUTCDay(); }
+  function dayNum(iso) { return parseInt(iso.slice(8, 10), 10); }
+  function monthName(iso) { return FR_M[parseInt(iso.slice(5, 7), 10) - 1]; }
+  function frDate(iso) {
+    return FR_D[dow(iso)] + " " + dayNum(iso) + " " + monthName(iso);
+  }
+  function frShort(iso) { return dayNum(iso) + " " + monthName(iso); }
+
+  function setStatus(msg, isErr) {
+    var s = document.getElementById("status");
+    s.textContent = msg || "";
+    s.className = isErr ? "err" : "";
+  }
+
+  function haveRange(a, b) { // toutes les nuits [a,b) connues ?
+    if (!store.props.length) return false;
+    var days = listDays(a, b);
+    for (var i = 0; i < store.props.length; i++) {
+      var d = store.daysById[store.props[i].id] || {};
+      for (var j = 0; j < days.length; j++) if (!d[days[j]]) return false;
+    }
+    return true;
+  }
+
+  function fetchRange(a, b, cb) {
+    setStatus("Chargement des disponibilités…");
+    fetch(BASE + "?data=1&start=" + a + "&end=" + b)
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(function (js) {
+        if (js.error) throw new Error(js.error);
+        store.props = js.properties.map(function (p) {
+          return { id: p.id, kind: p.kind, code: p.code, minStay: p.minStay, bookingUrl: p.bookingUrl };
+        });
+        js.properties.forEach(function (p) {
+          if (!store.daysById[p.id]) store.daysById[p.id] = {};
+          var tgt = store.daysById[p.id];
+          for (var k in p.days) tgt[k] = p.days[k];
+        });
+        setStatus("");
+        cb();
+      })
+      .catch(function (e) {
+        setStatus("Impossible de charger les disponibilités (" + e.message + "). Réessayez dans un instant.", true);
+      });
+  }
+
+  function ensure(a, b, cb) {
+    if (haveRange(a, b)) { cb(); return; }
+    // marge pour limiter les allers-retours
+    var end = addDays(b, 15);
+    fetchRange(a, end, cb);
+  }
+
+  // ---------- grille ----------
+  function renderGrid() {
+    var days = [];
+    for (var i = 0; i < VISIBLE; i++) days.push(addDays(viewStart, i));
+    var today = todayStr();
+    var selDays = selection ? listDays(selection.a, selection.d) : [];
+    var selSet = {};
+    selDays.forEach(function (x) { selSet[x] = 1; });
+
+    var html = "<thead><tr><th class='room'></th>";
+    // ligne des mois
+    var mcells = "";
+    var run = 0, runM = "";
+    days.forEach(function (dd) {
+      var m = monthName(dd) + " " + dd.slice(0, 4);
+      if (m !== runM) {
+        if (run > 0) mcells += "<th class='month' colspan='" + run + "'>" + runM + "</th>";
+        runM = m; run = 0;
+      }
+      run++;
+    });
+    if (run > 0) mcells += "<th class='month' colspan='" + run + "'>" + runM + "</th>";
+    html += mcells + "</tr><tr><th class='room'>Logement</th>";
+    days.forEach(function (dd) {
+      var w = dow(dd);
+      var cls = "day" + ((w === 0 || w === 6) ? " we" : "") + (dd === today ? " today" : "");
+      html += "<th class='" + cls + "'>" + FR_D[w] + "<span class='num'>" + dayNum(dd) + "</span></th>";
+    });
+    html += "</tr></thead><tbody>";
+
+    store.props.forEach(function (p) {
+      var d = store.daysById[p.id] || {};
+      html += "<tr><td class='room'><div class='code'>" + esc(p.code) + "</div><div class='kind'>" + esc(p.kind) + "</div>";
+      if (p.bookingUrl) html += "<a href='" + p.bookingUrl + "' target='_blank' rel='noopener'>Réserver &rsaquo;</a>";
+      html += "</td>";
+      days.forEach(function (dd) {
+        var cell = d[dd];
+        var w = dow(dd);
+        var cls, content = "", title;
+        if (!cell) { cls = "c"; title = ""; }
+        else if (cell.a === 1) {
+          cls = "c free" + ((w === 0 || w === 6) ? " we" : "");
+          content = cell.p != null ? Math.round(cell.p) + "&nbsp;€" : "&#10003;";
+          title = esc(p.code) + " — " + frDate(dd) + (cell.p != null ? " — " + cell.p + " € / nuit" : " — disponible");
+        } else {
+          cls = "c busy";
+          title = esc(p.code) + " — " + frDate(dd) + " — occupé";
+        }
+        if (selSet[dd]) cls += " sel";
+        html += "<td class='" + cls + "' title=\"" + title + "\">" + content + "</td>";
+      });
+      html += "</tr>";
+    });
+    html += "</tbody>";
+    document.getElementById("cal").innerHTML = html;
+    document.getElementById("gridtitle").textContent =
+      frShort(days[0]) + " – " + frShort(days[days.length - 1]) + " " + days[days.length - 1].slice(0, 4);
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  // ---------- recherche / combinaisons ----------
+  function nightsFree(p, days) {
+    var d = store.daysById[p.id] || {};
+    for (var i = 0; i < days.length; i++) {
+      var c = d[days[i]];
+      if (!c || c.a !== 1) return false;
+    }
+    return true;
+  }
+  function runLength(p, from, until) { // nuits consécutives dispo à partir de from, jusqu'à until (exclu)
+    var d = store.daysById[p.id] || {};
+    var n = 0, c = from;
+    while (c < until) {
+      var cell = d[c];
+      if (!cell || cell.a !== 1) break;
+      n++; c = addDays(c, 1);
+    }
+    return n;
+  }
+  function sumPrice(p, days) {
+    var d = store.daysById[p.id] || {}, t = 0, missing = false;
+    days.forEach(function (dd) {
+      var c = d[dd];
+      if (c && c.p != null) t += c.p; else missing = true;
+    });
+    return missing ? null : t;
+  }
+
+  function greedyFrom(firstProp, a, dEnd) {
+    var segs = [], cur = a, guard = 0;
+    var props = store.props;
+    while (cur < dEnd && guard++ < 30) {
+      var best = null, bestRun = 0;
+      if (segs.length === 0 && firstProp) {
+        best = firstProp; bestRun = runLength(firstProp, cur, dEnd);
+        if (bestRun === 0) return null;
+      } else {
+        var prevId = segs.length ? segs[segs.length - 1].p.id : -1;
+        props.forEach(function (p) {
+          if (p.id === prevId) return;
+          var r = runLength(p, cur, dEnd);
+          if (r > bestRun) { bestRun = r; best = p; }
+        });
+        if (!best || bestRun === 0) return null;
+      }
+      var to = addDays(cur, bestRun);
+      if (to > dEnd) to = dEnd;
+      segs.push({ p: best, from: cur, to: to });
+      cur = to;
+      firstProp = null;
+    }
+    return cur >= dEnd ? segs : null;
+  }
+
+  function findCombos(a, dEnd) {
+    var seen = {}, out = [];
+    // essaie chaque logement comme premier maillon + le choix glouton pur
+    var starts = [null].concat(store.props);
+    starts.forEach(function (fp) {
+      var segs = greedyFrom(fp, a, dEnd);
+      if (!segs || segs.length < 2) return;
+      var sig = segs.map(function (s) { return s.p.id + ":" + s.from; }).join("|");
+      if (seen[sig]) return;
+      seen[sig] = 1;
+      var total = 0, totalOk = true, minStayIssue = false;
+      segs.forEach(function (s) {
+        var t = sumPrice(s.p, listDays(s.from, s.to));
+        if (t == null) totalOk = false; else total += t;
+        if (listDays(s.from, s.to).length < (s.p.minStay || 1)) minStayIssue = true;
+      });
+      out.push({ segs: segs, total: totalOk ? total : null, minStayIssue: minStayIssue });
+    });
+    out.sort(function (x, y) {
+      if (x.segs.length !== y.segs.length) return x.segs.length - y.segs.length;
+      return (x.total == null ? 1e9 : x.total) - (y.total == null ? 1e9 : y.total);
+    });
+    return out.slice(0, 3);
+  }
+
+  function renderResults(a, dEnd) {
+    var days = listDays(a, dEnd);
+    var nights = days.length;
+    var box = document.getElementById("results");
+    var html = "";
+    var free = store.props.filter(function (p) { return nightsFree(p, days); });
+
+    html += "<div class='rescard'><h3>Du " + frDate(a) + " au " + frDate(dEnd) + " · " + nights + " nuit" + (nights > 1 ? "s" : "") + "</h3>";
+
+    if (free.length) {
+      html += "<p style='font-size:14px;margin-bottom:4px'><strong>" + free.length + " logement" + (free.length > 1 ? "s" : "") + " disponible" + (free.length > 1 ? "s" : "") + " sur toute la période :</strong></p>";
+      free.forEach(function (p) {
+        var t = sumPrice(p, days);
+        var ms = p.minStay || 1;
+        html += "<div class='optline'><span class='seg'>" + esc(p.code) + "</span><span style='font-size:13px;color:#6b7280'>" + esc(p.kind) + "</span>";
+        html += "<span class='tot'>" + (t != null ? Math.round(t) + " € <small>total</small>" : "") + "</span>";
+        if (p.bookingUrl) html += "<a class='book' href='" + p.bookingUrl + "' target='_blank' rel='noopener'>Réserver</a>";
+        html += "</div>";
+        if (nights < ms) html += "<div class='note'>&#9888; Séjour minimum de " + ms + " nuits pour ce logement.</div>";
+      });
+    } else {
+      html += "<p class='empty'>Aucun logement n'est libre sur toute la période&hellip; mais voici comment y arriver en changeant de logement :</p>";
+    }
+
+    var combos = findCombos(a, dEnd);
+    if (!free.length && !combos.length) {
+      html += "<p class='empty' style='margin-top:8px'>Désolé, impossible de couvrir cette période, même en combinant les logements. Essayez d'autres dates.</p>";
+    }
+    if (combos.length && (free.length === 0)) {
+      combos.forEach(function (c) {
+        html += "<div class='optline'>";
+        c.segs.forEach(function (s, i) {
+          if (i > 0) html += "<span class='arrow'>&#8594;</span>";
+          html += "<span class='seg' title='" + esc(s.p.kind) + "'>" + esc(s.p.code) + " <small>" + frShort(s.from) + " &#8594; " + frShort(s.to) + "</small></span>";
+        });
+        html += "<span class='tot'>" + (c.total != null ? Math.round(c.total) + " € <small>total</small>" : "") + "</span>";
+        html += "</div>";
+        if (c.minStayIssue) html += "<div class='note'>&#9888; Certaines étapes sont plus courtes que le séjour minimum habituel — contactez-nous, on s'arrange.</div>";
+      });
+      html += "<div class='note'>Les dates indiquées vont de la nuit d'arrivée au jour de départ (changement de logement ce jour-là).</div>";
+    }
+    html += "</div>";
+    box.innerHTML = html;
+  }
+
+  // ---------- events ----------
+  document.getElementById("go").addEventListener("click", function () {
+    var a = document.getElementById("din").value;
+    var d = document.getElementById("dout").value;
+    if (!a || !d || d <= a) { setStatus("Choisissez une date d'arrivée puis une date de départ postérieure.", true); return; }
+    var t = todayStr();
+    if (a < t) { setStatus("La date d'arrivée est déjà passée.", true); return; }
+    selection = { a: a, d: d };
+    document.getElementById("clear").style.display = "";
+    ensure(a, d, function () {
+      viewStart = a;
+      renderGrid();
+      renderResults(a, d);
+    });
+  });
+  document.getElementById("clear").addEventListener("click", function () {
+    selection = null;
+    document.getElementById("results").innerHTML = "";
+    document.getElementById("din").value = "";
+    document.getElementById("dout").value = "";
+    this.style.display = "none";
+    renderGrid();
+  });
+  document.getElementById("prev").addEventListener("click", function () {
+    var t = todayStr();
+    var ns = addDays(viewStart, -14);
+    if (ns < t) ns = t;
+    viewStart = ns;
+    ensure(viewStart, addDays(viewStart, VISIBLE), renderGrid);
+  });
+  document.getElementById("next").addEventListener("click", function () {
+    viewStart = addDays(viewStart, 14);
+    ensure(viewStart, addDays(viewStart, VISIBLE), renderGrid);
+  });
+  document.getElementById("tod").addEventListener("click", function () {
+    viewStart = todayStr();
+    ensure(viewStart, addDays(viewStart, VISIBLE), renderGrid);
+  });
+  var din = document.getElementById("din");
+  din.min = todayStr();
+  document.getElementById("dout").min = addDays(todayStr(), 1);
+  din.addEventListener("change", function () {
+    if (din.value) document.getElementById("dout").min = addDays(din.value, 1);
+  });
+
+  // premier chargement
+  ensure(viewStart, addDays(viewStart, VISIBLE), renderGrid);
+})();
+</script>
+</body>
+</html>

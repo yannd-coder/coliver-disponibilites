@@ -89,12 +89,39 @@
   .empty { color: var(--muted); font-size: 14px; line-height: 1.5; }
   #status { font-size: 13px; color: var(--muted); margin: 10px 2px; }
   .err { color: hsl(8 70% 44%); }
+  .roomrow { display: flex; gap: 9px; align-items: center; }
+  .rthumb { width: 46px; height: 46px; border-radius: 9px; object-fit: cover; cursor: pointer; border: 1px solid var(--border); flex: none; }
+  .rinfo { min-width: 0; }
+  .rlinks { display: flex; gap: 9px; font-size: 11.5px; margin-top: 2px; }
+  .rlinks a { color: var(--gold-dark); font-weight: 600; text-decoration: none; }
+  .rlinks a:hover { text-decoration: underline; }
+  #pmodal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: hsl(24 30% 10% / .55); backdrop-filter: blur(3px); z-index: 50; }
+  .pmcard { width: 50vw; min-width: 340px; max-width: 700px; max-height: 84vh; overflow-y: auto; background: var(--card); border-radius: var(--radius); box-shadow: 0 25px 60px hsl(24 30% 14% / .4); position: relative; }
+  .pmclose { position: absolute; top: 10px; right: 10px; z-index: 2; width: 32px; height: 32px; border: 0; border-radius: 999px; background: hsl(24 30% 14% / .55); color: #fff; font-size: 18px; cursor: pointer; line-height: 1; }
+  .gal { position: relative; }
+  .gal img { width: 100%; height: 320px; object-fit: cover; display: block; border-radius: var(--radius) var(--radius) 0 0; background: var(--paper-deep); }
+  .galbtn { position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border: 0; border-radius: 999px; background: hsl(36 38% 97% / .92); color: var(--ink); font-size: 18px; cursor: pointer; box-shadow: 0 2px 8px hsl(24 30% 14% / .25); }
+  .galprev { left: 10px; } .galnext { right: 10px; }
+  .galcount { position: absolute; bottom: 10px; right: 12px; background: hsl(24 30% 14% / .6); color: #fff; font-size: 11px; padding: 3px 9px; border-radius: 999px; }
+  .pmbody-in { padding: 16px 20px 20px; }
+  .pmtitle { font-family: var(--font-display); font-size: 24px; font-weight: 600; letter-spacing: -.02em; }
+  .badges { display: flex; gap: 8px; margin: 9px 0 12px; flex-wrap: wrap; }
+  .badge { background: var(--paper); border: 1px solid var(--border); border-radius: 999px; padding: 3px 11px; font-size: 12px; color: var(--muted); font-weight: 500; }
+  .pmdesc { font-size: 13.5px; line-height: 1.55; color: hsl(24 20% 25%); }
+  .pmdesc h3 { font-family: var(--font-display); font-size: 16px; margin: 12px 0 4px; }
+  .pmdesc p, .pmdesc ul { margin: 6px 0; }
+  .pmdesc ul { padding-left: 18px; }
+  .pmload { padding: 40px 20px; text-align: center; color: var(--muted); font-size: 14px; }
+  .pmfoot { display: flex; gap: 12px; align-items: center; margin-top: 16px; }
   @media (max-width: 640px) {
     header.hero { padding: 26px 16px 46px; }
     header.hero h1 { font-size: 26px; }
     .searchbar { padding: 12px; }
     th.room, td.room { min-width: 110px; max-width: 130px; padding: 7px 9px; }
     td.room .kind { display: none; }
+    .rthumb { width: 38px; height: 38px; }
+    .pmcard { width: 92vw; min-width: 0; }
+    .gal img { height: 220px; }
   }
 </style>
 </head>
@@ -126,6 +153,7 @@
   <div class="gridbox"><table class="cal" id="cal"></table></div>
   <div id="status"></div>
 </div>
+<div id="pmodal"><div class="pmcard"><button class="pmclose" data-close="1" aria-label="Fermer">&times;</button><div id="pmbody"></div></div></div>
 <script>
 (function () {
   var BASE = "https://flqjaqocsugwbkbiuhhk.supabase.co/functions/v1/lodgify-calendar";
@@ -195,7 +223,7 @@
       .then(function (js) {
         if (js.error) throw new Error(js.error);
         store.props = js.properties.map(function (p) {
-          return { id: p.id, kind: p.kind, code: p.code, minStay: p.minStay, cleaningFee: p.cleaningFee || 0, bookingUrl: BOOKING[p.id] || p.bookingUrl };
+          return { id: p.id, kind: p.kind, code: p.code, minStay: p.minStay, cleaningFee: p.cleaningFee || 0, image: p.image || "", maxPeople: p.maxPeople || null, bookingUrl: BOOKING[p.id] || p.bookingUrl };
         });
         js.properties.forEach(function (p) {
           if (!store.daysById[p.id]) store.daysById[p.id] = {};
@@ -249,9 +277,13 @@
 
     store.props.forEach(function (p) {
       var d = store.daysById[p.id] || {};
-      html += "<tr><td class='room'><div class='code'>" + esc(p.code) + "</div><div class='kind'>" + esc(p.kind) + "</div>";
-      if (p.bookingUrl) html += "<a href='" + p.bookingUrl + "' target='_blank' rel='noopener'>Réserver &rsaquo;</a>";
-      html += "</td>";
+      html += "<tr><td class='room'><div class='roomrow'>";
+      if (p.image) html += "<img class='rthumb' src='" + p.image + "?w=160' alt='' loading='lazy' data-prop='" + p.id + "' title='Voir le logement'>";
+      html += "<div class='rinfo'><div class='code'>" + esc(p.code) + "</div>";
+      html += "<div class='kind'>" + esc(p.kind) + (p.maxPeople ? " &middot; " + p.maxPeople + " pers." : "") + "</div>";
+      html += "<div class='rlinks'><a href='#' data-prop='" + p.id + "'>D&eacute;tails</a>";
+      if (p.bookingUrl) html += "<a href='" + p.bookingUrl + "' target='_blank' rel='noopener'>R&eacute;server &rsaquo;</a>";
+      html += "</div></div></div></td>";
       days.forEach(function (dd) {
         var cell = d[dd];
         var w = dow(dd);
@@ -460,6 +492,81 @@
   din.addEventListener("change", function () {
     if (din.value) document.getElementById("dout").min = addDays(din.value, 1);
   });
+
+  // ---------- fiche logement (pop-up) ----------
+  var propCache = {};
+  var galImgs = [], galIdx = 0;
+  function openProp(id) {
+    var ov = document.getElementById("pmodal");
+    if (!ov) return;
+    ov.style.display = "flex";
+    document.body.style.overflow = "hidden";
+    if (propCache[id]) { renderProp(propCache[id]); return; }
+    document.getElementById("pmbody").innerHTML = "<div class='pmload'>Chargement de la fiche&hellip;</div>";
+    fetch(BASE + "?prop=" + id)
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(function (js) { propCache[id] = js; renderProp(js); })
+      .catch(function () {
+        document.getElementById("pmbody").innerHTML = "<div class='pmload'>Impossible de charger la fiche pour le moment.</div>";
+      });
+  }
+  function closeProp() {
+    var ov = document.getElementById("pmodal");
+    if (ov) ov.style.display = "none";
+    document.body.style.overflow = "";
+  }
+  function renderProp(d) {
+    galImgs = d.images || []; galIdx = 0;
+    var html = "";
+    if (galImgs.length) {
+      html += "<div class='gal'><img id='galimg' src='" + galImgs[0] + "?w=1000' alt=''>";
+      if (galImgs.length > 1) {
+        html += "<button class='galbtn galprev' data-gal='-1'>&#8249;</button>";
+        html += "<button class='galbtn galnext' data-gal='1'>&#8250;</button>";
+        html += "<span class='galcount' id='galcount'>1 / " + galImgs.length + "</span>";
+      }
+      html += "</div>";
+    }
+    html += "<div class='pmbody-in'>";
+    html += "<div class='pmtitle'>" + esc(d.code) + "</div>";
+    html += "<div class='badges'>";
+    if (d.kind) html += "<span class='badge'>" + esc(d.kind) + "</span>";
+    if (d.maxPeople) html += "<span class='badge'>" + d.maxPeople + " personne" + (d.maxPeople > 1 ? "s" : "") + "</span>";
+    if (d.cleaningFee) html += "<span class='badge'>M&eacute;nage " + Math.round(d.cleaningFee) + " € / s&eacute;jour</span>";
+    html += "</div>";
+    if (d.desc) html += "<div class='pmdesc'>" + d.desc + "</div>";
+    var burl = BOOKING[d.id];
+    if (burl) html += "<div class='pmfoot'><a class='book' href='" + burl + "' target='_blank' rel='noopener'>R&eacute;server ce logement &#8599;</a></div>";
+    html += "</div>";
+    document.getElementById("pmbody").innerHTML = html;
+  }
+  function galShow(delta) {
+    if (!galImgs.length) return;
+    galIdx = (galIdx + delta + galImgs.length) % galImgs.length;
+    var im = document.getElementById("galimg");
+    if (im) im.src = galImgs[galIdx] + "?w=1000";
+    var ct = document.getElementById("galcount");
+    if (ct) ct.textContent = (galIdx + 1) + " / " + galImgs.length;
+  }
+  if (document.addEventListener) {
+    document.addEventListener("click", function (e) {
+      var t = e.target;
+      var el = t && t.closest ? t.closest("[data-prop],[data-gal],[data-close]") : null;
+      if (el) {
+        if (el.getAttribute("data-prop")) { e.preventDefault(); openProp(parseInt(el.getAttribute("data-prop"), 10)); return; }
+        if (el.getAttribute("data-gal")) { galShow(parseInt(el.getAttribute("data-gal"), 10)); return; }
+        if (el.getAttribute("data-close")) { e.preventDefault(); closeProp(); return; }
+      }
+      if (t && t.id === "pmodal") closeProp();
+    });
+    document.addEventListener("keydown", function (e) {
+      var ov = document.getElementById("pmodal");
+      if (!ov || ov.style.display === "none" || !ov.style.display) return;
+      if (e.key === "Escape") closeProp();
+      else if (e.key === "ArrowLeft") galShow(-1);
+      else if (e.key === "ArrowRight") galShow(1);
+    });
+  }
 
   // premier chargement
   ensure(viewStart, addDays(viewStart, VISIBLE), renderGrid);

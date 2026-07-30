@@ -100,6 +100,19 @@
 <script>
 (function () {
   var BASE = "https://flqjaqocsugwbkbiuhhk.supabase.co/functions/v1/lodgify-calendar";
+  // Pages de réservation sur le site Lodgify (slug = nom complet du logement)
+  var SITE = "https://coliver.lodgify.com/fr/";
+  var BOOKING = {
+    607741: SITE + "tiny-villa-coco--coliving-with-spa-pool-coworking",
+    607742: SITE + "le-jungle-loft---villa-coliving-piscine-spa-coworking",
+    607743: SITE + "chambre-nook---villa-coliving-spa-pool-coworking",
+    607744: SITE + "studio-terracotta--villa-coliving-spa-pool-coworking",
+    607745: SITE + "tiny-villa-litchi--coliving-with-spa-pool-coworking",
+    607746: SITE + "appartement-savana---villa-coliving-spa-pool-coworking",
+    607747: SITE + "chambre-sanya---villa-coliving-pool-spa-coworking",
+    607748: SITE + "chambre-anjara---villa-coliving-pool-spa-coworking",
+    607749: SITE + "chambre-kinoo---villa-coliving-pool-spa-coworking"
+  };
   var VISIBLE = 31;        // jours affichés dans la grille
   var store = { props: [], daysById: {} };
   var viewStart = todayStr();
@@ -153,7 +166,7 @@
       .then(function (js) {
         if (js.error) throw new Error(js.error);
         store.props = js.properties.map(function (p) {
-          return { id: p.id, kind: p.kind, code: p.code, minStay: p.minStay, bookingUrl: p.bookingUrl };
+          return { id: p.id, kind: p.kind, code: p.code, minStay: p.minStay, bookingUrl: BOOKING[p.id] || p.bookingUrl };
         });
         js.properties.forEach(function (p) {
           if (!store.daysById[p.id]) store.daysById[p.id] = {};

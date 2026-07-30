@@ -59,6 +59,13 @@
   .tot { margin-left: auto; font-weight: 700; font-size: 14px; white-space: nowrap; }
   .tot small { color: var(--muted); font-weight: 500; }
   .book { background: var(--accent); color: #fff; border-radius: 8px; padding: 6px 12px; font-size: 13px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+  .combo { border: 1px solid #e5e7eb; border-radius: 10px; padding: 8px 12px; margin-top: 10px; }
+  .combotitle { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin: 4px 0 2px; }
+  .comboline { display: flex; align-items: center; gap: 10px; padding: 6px 0; flex-wrap: wrap; }
+  .comboline .book { margin-left: auto; }
+  .segdet { font-size: 13px; color: var(--muted); }
+  .segdet strong { color: var(--ink); font-size: 14px; }
+  .combototal { border-top: 1px solid #f0f1f3; margin-top: 4px; padding: 8px 0 4px; font-size: 14px; }
   .note { font-size: 12px; color: var(--muted); margin-top: 6px; }
   .empty { color: var(--muted); font-size: 14px; }
   #status { font-size: 13px; color: var(--muted); margin: 8px 2px; }
@@ -362,17 +369,23 @@
       html += "<p class='empty' style='margin-top:8px'>Désolé, impossible de couvrir cette période, même en combinant les logements. Essayez d'autres dates.</p>";
     }
     if (combos.length && (free.length === 0)) {
-      combos.forEach(function (c) {
-        html += "<div class='optline'>";
-        c.segs.forEach(function (s, i) {
-          if (i > 0) html += "<span class='arrow'>&#8594;</span>";
+      combos.forEach(function (c, ci) {
+        html += "<div class='combo'>";
+        if (combos.length > 1) html += "<div class='combotitle'>Option " + (ci + 1) + "</div>";
+        c.segs.forEach(function (s) {
+          var segDays = listDays(s.from, s.to);
+          var t = sumPrice(s.p, segDays);
+          html += "<div class='comboline'>";
           html += "<span class='seg' title='" + esc(s.p.kind) + "'>" + esc(s.p.code) + " <small>" + frShort(s.from) + " &#8594; " + frShort(s.to) + "</small></span>";
+          html += "<span class='segdet'>" + segDays.length + " nuit" + (segDays.length > 1 ? "s" : "") + (t != null ? " &middot; <strong>" + Math.round(t) + " €</strong>" : "") + "</span>";
+          if (s.p.bookingUrl) html += "<a class='book' href='" + s.p.bookingUrl + "' target='_blank' rel='noopener'>Réserver</a>";
+          html += "</div>";
         });
-        html += "<span class='tot'>" + (c.total != null ? Math.round(c.total) + " € <small>total</small>" : "") + "</span>";
-        html += "</div>";
+        html += "<div class='combototal'>Total séjour : <strong>" + (c.total != null ? Math.round(c.total) + " €" : "&mdash;") + "</strong> &middot; " + nights + " nuit" + (nights > 1 ? "s" : "") + "</div>";
         if (c.minStayIssue) html += "<div class='note'>&#9888; Certaines étapes sont plus courtes que le séjour minimum habituel — contactez-nous, on s'arrange.</div>";
+        html += "</div>";
       });
-      html += "<div class='note'>Les dates indiquées vont de la nuit d'arrivée au jour de départ (changement de logement ce jour-là).</div>";
+      html += "<div class='note'>Les dates indiquées vont de la nuit d'arrivée au jour de départ (changement de logement ce jour-là). Réservez chaque logement séparément pour couvrir tout votre séjour.</div>";
     }
     html += "</div>";
     box.innerHTML = html;

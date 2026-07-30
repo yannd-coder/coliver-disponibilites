@@ -195,7 +195,7 @@
       .then(function (js) {
         if (js.error) throw new Error(js.error);
         store.props = js.properties.map(function (p) {
-          return { id: p.id, kind: p.kind, code: p.code, minStay: p.minStay, bookingUrl: BOOKING[p.id] || p.bookingUrl };
+          return { id: p.id, kind: p.kind, code: p.code, minStay: p.minStay, cleaningFee: p.cleaningFee || 0, bookingUrl: BOOKING[p.id] || p.bookingUrl };
         });
         js.properties.forEach(function (p) {
           if (!store.daysById[p.id]) store.daysById[p.id] = {};
@@ -350,7 +350,7 @@
       var total = 0, totalOk = true, minStayIssue = false;
       segs.forEach(function (s) {
         var t = sumPrice(s.p, listDays(s.from, s.to));
-        if (t == null) totalOk = false; else total += t;
+        if (t == null) totalOk = false; else total += t + (s.p.cleaningFee || 0);
         if (listDays(s.from, s.to).length < (s.p.minStay || 1)) minStayIssue = true;
       });
       out.push({ segs: segs, total: totalOk ? total : null, minStayIssue: minStayIssue });
@@ -375,9 +375,10 @@
       html += "<p style='font-size:14px;margin-bottom:4px'><strong>" + free.length + " logement" + (free.length > 1 ? "s" : "") + " disponible" + (free.length > 1 ? "s" : "") + " sur toute la période :</strong></p>";
       free.forEach(function (p) {
         var t = sumPrice(p, days);
+        var fee = p.cleaningFee || 0;
         var ms = p.minStay || 1;
         html += "<div class='optline'><span class='seg'>" + esc(p.code) + "</span><span style='font-size:13px;color:#6b7280'>" + esc(p.kind) + "</span>";
-        html += "<span class='tot'>" + (t != null ? Math.round(t) + " € <small>total</small>" : "") + "</span>";
+        html += "<span class='tot'>" + (t != null ? Math.round(t + fee) + " € <small>total" + (fee ? ", dont " + Math.round(fee) + " € ménage" : "") + "</small>" : "") + "</span>";
         if (p.bookingUrl) html += "<a class='book' href='" + p.bookingUrl + "' target='_blank' rel='noopener'>Réserver</a>";
         html += "</div>";
         if (nights < ms) html += "<div class='note'>&#9888; Séjour minimum de " + ms + " nuits pour ce logement.</div>";
@@ -397,13 +398,15 @@
         c.segs.forEach(function (s) {
           var segDays = listDays(s.from, s.to);
           var t = sumPrice(s.p, segDays);
+          var fee = s.p.cleaningFee || 0;
           html += "<div class='comboline'>";
           html += "<span class='seg' title='" + esc(s.p.kind) + "'>" + esc(s.p.code) + " <small>" + frShort(s.from) + " &#8594; " + frShort(s.to) + "</small></span>";
-          html += "<span class='segdet'>" + segDays.length + " nuit" + (segDays.length > 1 ? "s" : "") + (t != null ? " &middot; <strong>" + Math.round(t) + " €</strong>" : "") + "</span>";
+          html += "<span class='segdet'>" + segDays.length + " nuit" + (segDays.length > 1 ? "s" : "") + (t != null ? " &middot; <strong>" + Math.round(t + fee) + " €</strong>" + (fee ? " <small>(dont " + Math.round(fee) + " € ménage)</small>" : "") : "") + "</span>";
           if (s.p.bookingUrl) html += "<a class='book' href='" + s.p.bookingUrl + "' target='_blank' rel='noopener'>Réserver</a>";
           html += "</div>";
         });
-        html += "<div class='combototal'>Total séjour : <strong>" + (c.total != null ? Math.round(c.total) + " €" : "&mdash;") + "</strong> &middot; " + nights + " nuit" + (nights > 1 ? "s" : "") + "</div>";
+        var hasFee = c.segs.some(function (s) { return s.p.cleaningFee; });
+        html += "<div class='combototal'>Total séjour : <strong>" + (c.total != null ? Math.round(c.total) + " €" : "&mdash;") + "</strong> &middot; " + nights + " nuit" + (nights > 1 ? "s" : "") + (hasFee ? " &middot; <small>frais de ménage inclus</small>" : "") + "</div>";
         if (c.minStayIssue) html += "<div class='note'>&#9888; Certaines étapes sont plus courtes que le séjour minimum habituel — contactez-nous, on s'arrange.</div>";
         html += "</div>";
       });

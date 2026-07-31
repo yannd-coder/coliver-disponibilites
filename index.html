@@ -42,15 +42,16 @@
   .gnum { flex: none; width: 26px; height: 26px; border-radius: 999px; background: var(--gold-dark); color: #fff; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
   .gstep strong { font-size: 13.5px; display: block; margin-bottom: 3px; }
   .gstep p { font-family: var(--font-display); font-style: italic; font-size: 12.5px; color: var(--muted); line-height: 1.5; }
-  .searchbar { display: flex; flex-wrap: wrap; gap: 14px; align-items: end; background: var(--card); border-radius: var(--radius); padding: 18px; margin-top: 24px; box-shadow: var(--shadow-card); }
+  .searchbar { background: var(--card); border-radius: var(--radius); border: 1.5px solid hsl(32 45% 78%); padding: 22px 26px 24px; margin: 28px auto 0; max-width: 760px; box-shadow: 0 12px 36px hsl(32 60% 30% / .14); text-align: center; }
+  .sb-controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: end; justify-content: center; margin-top: 14px; text-align: left; }
   .field label { display: block; font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-dark); margin-bottom: 6px; }
   .field input { border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 12px; font-size: 15px; font-family: var(--font-body); background: #fff; color: var(--ink); }
-  .btn { border: 0; border-radius: 12px; padding: 12px 22px; font-size: 15px; font-weight: 600; font-family: var(--font-body); cursor: pointer; }
+  .btn { border: 0; border-radius: 12px; padding: 13px 24px; font-size: 16px; font-weight: 600; font-family: var(--font-body); cursor: pointer; }
   .btn-primary { background: var(--gold-dark); color: hsl(36 38% 97%); transition: background .15s ease; }
   .btn-primary:hover { background: var(--gold-deep); }
   .btn-ghost { background: transparent; color: var(--muted); text-decoration: underline; font-size: 13px; padding: 12px 6px; }
   .dfield { position: relative; }
-  .dbtn { border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 14px; font-size: 15px; font-family: var(--font-body); background: #fff; color: var(--ink); cursor: pointer; min-width: 220px; text-align: left; }
+  .dbtn { border: 1.5px solid var(--border); border-radius: 12px; padding: 12px 16px; font-size: 16px; font-family: var(--font-body); background: #fff; color: var(--ink); cursor: pointer; min-width: 250px; text-align: left; }
   .dbtn:hover { border-color: var(--gold); }
   #dpick { display: none; position: absolute; top: calc(100% + 6px); left: 0; z-index: 30; background: var(--card); border: 1px solid var(--hair); border-radius: 16px; box-shadow: var(--shadow-card), 0 16px 44px hsl(24 30% 14% / .16); padding: 12px; width: 312px; }
   .phead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
@@ -150,7 +151,8 @@
     .hero2 h1 { font-size: 31px; }
     .lede { font-size: 15px; }
     .wrap { padding: 0 12px; }
-    .searchbar { padding: 14px; gap: 10px; }
+    .searchbar { padding: 16px 14px 18px; }
+    .sb-controls { gap: 10px; }
     .btn-primary { flex: 1 1 100%; }
     th.room, td.room { min-width: 122px; max-width: 150px; padding: 6px 8px; }
     td.room .kind { display: none; }
@@ -208,6 +210,8 @@
     <p class="note" id="glegend">Dans le calendrier ci-dessous : <span class="chip free"></span>vert = disponible (prix par nuit) &middot; <span class="chip busy"></span>hachuré = occupé. Naviguez dans le temps avec les flèches &#8249; &#8250;.</p>
   </div>
   <div class="searchbar">
+    <div class="sb-head eyebrow">Commencez ici &mdash; choisissez vos dates</div>
+    <div class="sb-controls">
     <div class="field dfield">
       <label>Dates du séjour</label>
       <button type="button" id="drange" class="dbtn" data-dtoggle="1">Choisir vos dates</button>
@@ -216,6 +220,7 @@
     </div>
     <button class="btn btn-primary" id="go">Voir les disponibilités &#8594;</button>
     <button class="btn btn-ghost" id="clear" style="display:none">Effacer</button>
+    </div>
   </div>
   <div id="results"></div>
   <div class="legend">

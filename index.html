@@ -107,6 +107,8 @@
   .optline:first-of-type { border-top: 0; }
   .seg { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-bd); border-radius: 10px; padding: 5px 11px; font-size: 13px; font-weight: 600; }
   .seg[data-prop] { cursor: pointer; transition: background .12s ease; }
+  .segeye { display: inline-block; vertical-align: -2px; margin-left: 6px; opacity: .7; }
+  .seg[data-prop]:hover .segeye { opacity: 1; }
   .seg[data-prop]:hover { background: hsl(150 38% 84%); text-decoration: underline; }
   .arrow { color: var(--muted); }
   .tot { margin-left: auto; font-size: 13px; color: var(--muted); white-space: nowrap; }
@@ -253,6 +255,8 @@
     607748: SITE + "chambre-anjara---villa-coliving-pool-spa-coworking",
     607749: SITE + "chambre-kinoo---villa-coliving-pool-spa-coworking"
   };
+  // picto œil : signale que la puce ouvre la fiche photos
+  var EYE = "<span class='segeye'><svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 12s4-7.5 11-7.5S23 12 23 12s-4 7.5-11 7.5S1 12 1 12z'/><circle cx='12' cy='12' r='3'/></svg></span>";
   var VISIBLE = 31;        // jours affichés dans la grille
   var store = { props: [], daysById: {} };
   var viewStart = todayStr();
@@ -520,7 +524,7 @@
         var t = sumPrice(p, days);
         var fee = p.cleaningFee || 0;
         var ms = p.minStay || 1;
-        html += "<div class='optline'><span class='seg' data-prop='" + p.id + "' title='Voir le logement'>" + esc(p.code) + "</span><span style='font-size:13px;color:#6b7280'>" + esc(p.kind) + "</span>";
+        html += "<div class='optline'><span class='seg' data-prop='" + p.id + "' title='Voir le logement'>" + esc(p.code) + EYE + "</span><span style='font-size:13px;color:#6b7280'>" + esc(p.kind) + "</span>";
         html += "<span class='tot'>" + (t != null ? Math.round(t + fee) + " € <small>total" + (fee ? ", dont " + Math.round(fee) + " € ménage" : "") + "</small>" : "") + "</span>";
         if (p.bookingUrl) html += "<a class='book' href='" + p.bookingUrl + "' target='_blank' rel='noopener'>Réserver</a>";
         html += "</div>";
@@ -535,7 +539,7 @@
         html += "<div class='alttitle'>Bonne nouvelle : à quelques jours près, c'est possible &#128071;</div>";
         alts.forEach(function (al) {
           html += "<div class='optline'>";
-          html += "<span class='seg' data-prop='" + al.p.id + "' title='Voir le logement'>" + esc(al.p.code) + " <small>" + frShort(al.a) + " &#8594; " + frShort(al.d) + "</small></span>";
+          html += "<span class='seg' data-prop='" + al.p.id + "' title='Voir le logement'>" + esc(al.p.code) + EYE + " <small>" + frShort(al.a) + " &#8594; " + frShort(al.d) + "</small></span>";
           html += "<span class='segdet'>" + (al.total != null ? "<strong>" + Math.round(al.total) + " €</strong> <small>(ménage inclus)</small>" : "") + (al.count > 1 ? " &middot; " + al.count + " logements dispo" : "") + "</span>";
           html += "<a class='book' href='#' data-alta='" + al.a + "' data-altd='" + al.d + "'>Choisir ces dates</a>";
           html += "</div>";
@@ -554,7 +558,7 @@
           var t = sumPrice(s.p, segDays);
           var fee = s.p.cleaningFee || 0;
           html += "<div class='comboline'>";
-          html += "<span class='seg' data-prop='" + s.p.id + "' title='" + esc(s.p.kind) + " — voir le logement'>" + esc(s.p.code) + " <small>" + frShort(s.from) + " &#8594; " + frShort(s.to) + "</small></span>";
+          html += "<span class='seg' data-prop='" + s.p.id + "' title='" + esc(s.p.kind) + " — voir le logement'>" + esc(s.p.code) + EYE + " <small>" + frShort(s.from) + " &#8594; " + frShort(s.to) + "</small></span>";
           html += "<span class='segdet'>" + segDays.length + " nuit" + (segDays.length > 1 ? "s" : "") + (t != null ? " &middot; <strong>" + Math.round(t + fee) + " €</strong>" + (fee ? " <small>(dont " + Math.round(fee) + " € ménage)</small>" : "") : "") + "</span>";
           if (s.p.bookingUrl) html += "<a class='book' href='" + s.p.bookingUrl + "' target='_blank' rel='noopener'>Réserver</a>";
           html += "</div>";

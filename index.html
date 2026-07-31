@@ -34,6 +34,14 @@
   .hero2 h1 em { font-style: italic; color: var(--gold); }
   .lede { font-family: var(--font-display); font-style: italic; font-size: 17px; color: hsl(24 20% 32%); line-height: 1.55; margin-top: 14px; max-width: 620px; }
   .wrap { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+  .guide { background: var(--card); border-radius: var(--radius); padding: 18px 20px; margin-top: 24px; box-shadow: var(--shadow-card); }
+  .guide-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .guide-title { font-family: var(--font-display); font-size: 22px; font-weight: 600; letter-spacing: -.02em; margin-top: 4px; }
+  .guide-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 14px; }
+  .gstep { display: flex; gap: 10px; align-items: flex-start; }
+  .gnum { flex: none; width: 26px; height: 26px; border-radius: 999px; background: var(--gold-dark); color: #fff; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+  .gstep strong { font-size: 13.5px; display: block; margin-bottom: 3px; }
+  .gstep p { font-family: var(--font-display); font-style: italic; font-size: 12.5px; color: var(--muted); line-height: 1.5; }
   .searchbar { display: flex; flex-wrap: wrap; gap: 14px; align-items: end; background: var(--card); border-radius: var(--radius); padding: 18px; margin-top: 24px; box-shadow: var(--shadow-card); }
   .field label { display: block; font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-dark); margin-bottom: 6px; }
   .field input { border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 12px; font-size: 15px; font-family: var(--font-body); background: #fff; color: var(--ink); }
@@ -153,6 +161,9 @@
     th.day { min-width: 36px; }
     td.c { min-width: 36px; height: 40px; font-size: 10px; }
     td.c.free.sel { box-shadow: inset 0 0 0 1.5px var(--gold-dark); }
+    .guide { padding: 14px 16px; }
+    .guide-title { font-size: 19px; }
+    .guide-steps { grid-template-columns: 1fr; gap: 12px; }
     .rescard { padding: 16px; }
     .rescard h3 { font-size: 20px; }
     .combo { padding: 8px 10px; }
@@ -180,6 +191,22 @@
   <p class="lede">Les logements libres sur votre période — et quand aucun n'est disponible en continu, les combinaisons malines pour rester dans la villa en changeant simplement de chambre.</p>
 </section>
 <div class="wrap">
+  <div class="guide">
+    <div class="guide-head">
+      <div>
+        <div class="eyebrow">Mode d'emploi</div>
+        <h2 class="guide-title">Comment ça marche ?</h2>
+      </div>
+      <button type="button" id="gtoggle" class="todaybtn">Masquer</button>
+    </div>
+    <div class="guide-steps" id="gsteps">
+      <div class="gstep"><span class="gnum">1</span><div><strong>Choisissez vos dates</strong><p>Cliquez sur « Choisir vos dates », puis sélectionnez votre arrivée et votre départ dans le calendrier.</p></div></div>
+      <div class="gstep"><span class="gnum">2</span><div><strong>Découvrez nos propositions</strong><p>Les logements libres sur toute votre période s'affichent. S'il n'y en a pas, nous composons votre séjour en changeant de chambre en cours de route — ou nous vous suggérons des dates proches.</p></div></div>
+      <div class="gstep"><span class="gnum">3</span><div><strong>Explorez les logements</strong><p>Cliquez sur une photo, un nom en vert ou « Détails » pour ouvrir la fiche complète : photos, description, capacité.</p></div></div>
+      <div class="gstep"><span class="gnum">4</span><div><strong>Réservez en ligne</strong><p>Le bouton « Réserver » vous emmène sur notre site de réservation sécurisé. Pour une combinaison, réservez chaque logement séparément.</p></div></div>
+    </div>
+    <p class="note" id="glegend">Dans le calendrier ci-dessous : <span class="chip free"></span>vert = disponible (prix par nuit) &middot; <span class="chip busy"></span>hachuré = occupé. Naviguez dans le temps avec les flèches &#8249; &#8250;.</p>
+  </div>
   <div class="searchbar">
     <div class="field dfield">
       <label>Dates du séjour</label>
@@ -734,6 +761,26 @@
       else if (e.key === "ArrowLeft") galShow(-1);
       else if (e.key === "ArrowRight") galShow(1);
     });
+  }
+
+  // ---------- visite guidée (masquable, mémorisée) ----------
+  var gt = document.getElementById("gtoggle");
+  if (gt) {
+    var guideHidden = false;
+    try { guideHidden = localStorage.getItem("coliverGuideHidden") === "1"; } catch (e) {}
+    var applyGuide = function () {
+      var st = document.getElementById("gsteps");
+      var lg = document.getElementById("glegend");
+      if (st) st.style.display = guideHidden ? "none" : "";
+      if (lg) lg.style.display = guideHidden ? "none" : "";
+      gt.textContent = guideHidden ? "Afficher" : "Masquer";
+    };
+    gt.addEventListener("click", function () {
+      guideHidden = !guideHidden;
+      try { localStorage.setItem("coliverGuideHidden", guideHidden ? "1" : "0"); } catch (e) {}
+      applyGuide();
+    });
+    applyGuide();
   }
 
   // premier chargement

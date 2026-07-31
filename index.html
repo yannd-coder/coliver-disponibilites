@@ -85,6 +85,21 @@
   .segdet strong { color: var(--ink); font-size: 14px; }
   .combototal { border-top: 1px solid hsl(32 16% 90%); margin-top: 5px; padding: 9px 0 5px; font-size: 14.5px; }
   .combototal strong { color: var(--gold-dark); font-size: 16px; }
+  .dfield { position: relative; }
+  .dbtn { border: 1.5px solid var(--border); border-radius: 10px; padding: 9px 12px; font-size: 15px; font-family: var(--font-body); background: #fff; color: var(--ink); cursor: pointer; min-width: 210px; text-align: left; }
+  .dbtn:hover { border-color: var(--gold); }
+  #dpick { display: none; position: absolute; top: calc(100% + 6px); left: 0; z-index: 30; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-card), 0 14px 40px hsl(24 30% 14% / .18); padding: 12px; width: 312px; }
+  .phead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .plabel { font-family: var(--font-display); font-weight: 600; font-size: 15px; text-transform: capitalize; }
+  .pnav { border: 1px solid var(--border); background: #fff; border-radius: 8px; width: 28px; height: 28px; cursor: pointer; font-size: 14px; }
+  .pgrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .pdn { font-size: 10.5px; color: var(--muted); text-align: center; padding: 3px 0; text-transform: uppercase; }
+  .pday { border: 0; background: transparent; height: 36px; border-radius: 8px; font-size: 13px; font-family: var(--font-body); color: var(--ink); cursor: pointer; }
+  .pday:hover { background: var(--paper); }
+  .pday.pdis { opacity: .3; pointer-events: none; }
+  .pday.pin { background: hsl(32 70% 42% / .14); }
+  .pday.psel { background: var(--grad-gold); color: #fff; font-weight: 700; }
+  .phint { font-size: 11.5px; color: var(--muted); margin-top: 8px; text-align: center; }
   .alttitle { font-weight: 700; font-size: 14px; margin: 14px 0 4px; }
   .note { font-size: 12px; color: var(--muted); margin-top: 7px; line-height: 1.45; }
   .empty { color: var(--muted); font-size: 14px; line-height: 1.5; }
@@ -137,6 +152,9 @@
     .seg { flex: 1 1 100%; }
     .book { padding: 6px 13px; font-size: 12.5px; }
     .combototal { font-size: 13.5px; }
+    #dpick { width: calc(100vw - 48px); max-width: 312px; }
+    .dbtn { width: 100%; }
+    .field.dfield { flex: 1 1 100%; }
     .pmcard { width: 92vw; min-width: 0; }
     .gal img { height: 220px; }
   }
@@ -151,8 +169,12 @@
 </header>
 <div class="wrap">
   <div class="searchbar">
-    <div class="field"><label for="din">Arrivée</label><input type="date" id="din"></div>
-    <div class="field"><label for="dout">Départ</label><input type="date" id="dout"></div>
+    <div class="field dfield">
+      <label>Dates du séjour</label>
+      <button type="button" id="drange" class="dbtn" data-dtoggle="1">Choisir vos dates</button>
+      <div id="dpick"></div>
+      <input type="hidden" id="din"><input type="hidden" id="dout">
+    </div>
     <button class="btn btn-primary" id="go">Voir les disponibilités</button>
     <button class="btn btn-ghost" id="clear" style="display:none">Effacer</button>
   </div>
@@ -444,12 +466,12 @@
     var box = document.getElementById("results");
     var html = "";
     var free = store.props.filter(function (p) { return nightsFree(p, days); });
-    var combos = free.length ? [] : findCombos(a, dEnd);
+    var combos = findCombos(a, dEnd).slice(0, free.length ? 2 : 3);
 
     html += "<div class='rescard'><h3>Du " + frDate(a) + " au " + frDate(dEnd) + " · " + nights + " nuit" + (nights > 1 ? "s" : "") + "</h3>";
 
     if (free.length) {
-      html += "<p style='font-size:14px;margin-bottom:4px'><strong>" + free.length + " logement" + (free.length > 1 ? "s" : "") + " disponible" + (free.length > 1 ? "s" : "") + " sur toute la période :</strong></p>";
+      html += "<div class='alttitle'>Proposition 1 &mdash; " + free.length + " logement" + (free.length > 1 ? "s" : "") + " disponible" + (free.length > 1 ? "s" : "") + " sur toute la période, sans changement de chambre :</div>";
       free.forEach(function (p) {
         var t = sumPrice(p, days);
         var fee = p.cleaningFee || 0;
@@ -460,8 +482,6 @@
         html += "</div>";
         if (nights < ms) html += "<div class='note'>&#9888; Séjour minimum de " + ms + " nuits pour ce logement.</div>";
       });
-    } else if (combos.length) {
-      html += "<p class='empty'>Aucun logement n'est libre sur toute la période&hellip; mais voici comment y arriver en changeant de logement :</p>";
     }
 
     if (!free.length && !combos.length) {
@@ -480,7 +500,8 @@
         html += "<p class='empty'>Aucune disponibilité non plus à &plusmn;14 jours. Essayez une autre période ou une durée plus courte.</p>";
       }
     }
-    if (combos.length && (free.length === 0)) {
+    if (combos.length) {
+      html += "<div class='alttitle'>Proposition " + (free.length ? "2" : "1") + " &mdash; Combinaison de chambres, avec changement de logement en cours de séjour :</div>";
       combos.forEach(function (c, ci) {
         html += "<div class='combo'>";
         if (combos.length > 1) html += "<div class='combotitle'>Option " + (ci + 1) + "</div>";
@@ -527,6 +548,9 @@
     document.getElementById("results").innerHTML = "";
     document.getElementById("din").value = "";
     document.getElementById("dout").value = "";
+    pickA = ""; pickD = "";
+    var b = document.getElementById("drange");
+    if (b) b.textContent = "Choisir vos dates";
     this.style.display = "none";
     renderGrid();
   });
@@ -551,6 +575,69 @@
   din.addEventListener("change", function () {
     if (din.value) document.getElementById("dout").min = addDays(din.value, 1);
   });
+
+  // ---------- sélecteur de dates (un seul calendrier) ----------
+  var pickA = "", pickD = "";
+  var pickMonth = todayStr().slice(0, 7);
+  function daysInMonth(y, mo) { return new Date(Date.UTC(y, mo, 0)).getUTCDate(); }
+  function setDates(a, d) {
+    pickA = a; pickD = d;
+    document.getElementById("din").value = a;
+    document.getElementById("dout").value = d;
+    var b = document.getElementById("drange");
+    if (b) b.textContent = frShort(a) + " \u2192 " + frShort(d);
+  }
+  function togglePicker() {
+    var el = document.getElementById("dpick");
+    if (!el) return;
+    if (el.style.display === "block") { el.style.display = "none"; return; }
+    if (pickA) pickMonth = pickA.slice(0, 7);
+    el.style.display = "block";
+    renderPicker();
+  }
+  function closePicker() {
+    var el = document.getElementById("dpick");
+    if (el) el.style.display = "none";
+  }
+  function movePickMonth(delta) {
+    var y = parseInt(pickMonth.slice(0, 4), 10), mo = parseInt(pickMonth.slice(5, 7), 10) + delta;
+    if (mo < 1) { mo = 12; y--; }
+    if (mo > 12) { mo = 1; y++; }
+    pickMonth = y + "-" + p2(mo);
+    renderPicker();
+  }
+  function handlePick(day) {
+    if (!pickA || (pickA && pickD)) { pickA = day; pickD = ""; renderPicker(); return; }
+    if (day <= pickA) { pickA = day; pickD = ""; renderPicker(); return; }
+    setDates(pickA, day);
+    closePicker();
+    document.getElementById("go").click();
+  }
+  function renderPicker() {
+    var el = document.getElementById("dpick");
+    if (!el) return;
+    var y = parseInt(pickMonth.slice(0, 4), 10), mo = parseInt(pickMonth.slice(5, 7), 10);
+    var t = todayStr();
+    var html = "<div class='phead'><button type='button' class='pnav' data-pnav='-1'>&#8249;</button><span class='plabel'>" + FR_M[mo - 1] + " " + y + "</span><button type='button' class='pnav' data-pnav='1'>&#8250;</button></div>";
+    html += "<div class='pgrid'>";
+    var dn = ["lun", "mar", "mer", "jeu", "ven", "sam", "dim"];
+    for (var i = 0; i < 7; i++) html += "<span class='pdn'>" + dn[i] + "</span>";
+    var first = pickMonth + "-01";
+    var offset = (dow(first) + 6) % 7;
+    for (i = 0; i < offset; i++) html += "<span></span>";
+    var n = daysInMonth(y, mo);
+    for (var d = 1; d <= n; d++) {
+      var iso = pickMonth + "-" + p2(d);
+      var cls = "pday";
+      if (iso < t) cls += " pdis";
+      if (iso === pickA || iso === pickD) cls += " psel";
+      else if (pickA && pickD && iso > pickA && iso < pickD) cls += " pin";
+      html += "<button type='button' class='" + cls + "' data-day='" + iso + "'>" + d + "</button>";
+    }
+    html += "</div>";
+    html += "<div class='phint'>" + ((!pickA || pickD) ? "Choisissez votre date d'arrivée" : "Choisissez maintenant votre date de départ") + "</div>";
+    el.innerHTML = html;
+  }
 
   // ---------- fiche logement (pop-up) ----------
   var propCache = {};
@@ -610,12 +697,14 @@
   if (document.addEventListener) {
     document.addEventListener("click", function (e) {
       var t = e.target;
-      var el = t && t.closest ? t.closest("[data-prop],[data-gal],[data-close],[data-alta]") : null;
+      var el = t && t.closest ? t.closest("[data-prop],[data-gal],[data-close],[data-alta],[data-day],[data-pnav],[data-dtoggle]") : null;
       if (el) {
+        if (el.getAttribute("data-day")) { handlePick(el.getAttribute("data-day")); return; }
+        if (el.getAttribute("data-pnav")) { movePickMonth(parseInt(el.getAttribute("data-pnav"), 10)); return; }
+        if (el.getAttribute("data-dtoggle")) { e.preventDefault(); togglePicker(); return; }
         if (el.getAttribute("data-alta")) {
           e.preventDefault();
-          document.getElementById("din").value = el.getAttribute("data-alta");
-          document.getElementById("dout").value = el.getAttribute("data-altd");
+          setDates(el.getAttribute("data-alta"), el.getAttribute("data-altd"));
           document.getElementById("go").click();
           return;
         }
@@ -624,6 +713,7 @@
         if (el.getAttribute("data-close")) { e.preventDefault(); closeProp(); return; }
       }
       if (t && t.id === "pmodal") closeProp();
+      if (!(t && t.closest && t.closest(".dfield"))) closePicker();
     });
     document.addEventListener("keydown", function (e) {
       var ov = document.getElementById("pmodal");

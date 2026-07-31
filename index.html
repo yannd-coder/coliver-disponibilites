@@ -85,6 +85,7 @@
   .segdet strong { color: var(--ink); font-size: 14px; }
   .combototal { border-top: 1px solid hsl(32 16% 90%); margin-top: 5px; padding: 9px 0 5px; font-size: 14.5px; }
   .combototal strong { color: var(--gold-dark); font-size: 16px; }
+  .alttitle { font-weight: 700; font-size: 14px; margin: 14px 0 4px; }
   .note { font-size: 12px; color: var(--muted); margin-top: 7px; line-height: 1.45; }
   .empty { color: var(--muted); font-size: 14px; line-height: 1.5; }
   #status { font-size: 13px; color: var(--muted); margin: 10px 2px; }
@@ -410,12 +411,40 @@
     return out.slice(0, 3);
   }
 
+  // dates proches (même durée) quand rien n'est possible sur la période demandée
+  function findAlternatives(a, dEnd) {
+    var nights = listDays(a, dEnd).length;
+    var t = todayStr();
+    var out = [];
+    for (var k = 1; k <= 14 && out.length < 3; k++) {
+      var offs = [k, -k];
+      for (var j = 0; j < offs.length && out.length < 3; j++) {
+        var a2 = addDays(a, offs[j]);
+        if (a2 < t) continue;
+        var d2 = addDays(a2, nights);
+        if (!haveRange(a2, d2)) continue;
+        var days2 = listDays(a2, d2);
+        var freeRooms = store.props.filter(function (p) { return nightsFree(p, days2); });
+        if (!freeRooms.length) continue;
+        var best = null, bestT = null;
+        freeRooms.forEach(function (p) {
+          var s = sumPrice(p, days2);
+          var tot = s != null ? s + (p.cleaningFee || 0) : null;
+          if (best == null || (tot != null && (bestT == null || tot < bestT))) { best = p; bestT = tot; }
+        });
+        out.push({ a: a2, d: d2, p: best, total: bestT, count: freeRooms.length });
+      }
+    }
+    return out;
+  }
+
   function renderResults(a, dEnd) {
     var days = listDays(a, dEnd);
     var nights = days.length;
     var box = document.getElementById("results");
     var html = "";
     var free = store.props.filter(function (p) { return nightsFree(p, days); });
+    var combos = free.length ? [] : findCombos(a, dEnd);
 
     html += "<div class='rescard'><h3>Du " + frDate(a) + " au " + frDate(dEnd) + " · " + nights + " nuit" + (nights > 1 ? "s" : "") + "</h3>";
 
@@ -431,13 +460,25 @@
         html += "</div>";
         if (nights < ms) html += "<div class='note'>&#9888; Séjour minimum de " + ms + " nuits pour ce logement.</div>";
       });
-    } else {
+    } else if (combos.length) {
       html += "<p class='empty'>Aucun logement n'est libre sur toute la période&hellip; mais voici comment y arriver en changeant de logement :</p>";
     }
 
-    var combos = findCombos(a, dEnd);
     if (!free.length && !combos.length) {
-      html += "<p class='empty' style='margin-top:8px'>Désolé, impossible de couvrir cette période, même en combinant les logements. Essayez d'autres dates.</p>";
+      html += "<p class='empty' style='margin-top:8px'>Désolé, aucun logement (même en combinant) ne peut couvrir ces dates.</p>";
+      var alts = findAlternatives(a, dEnd);
+      if (alts.length) {
+        html += "<div class='alttitle'>Bonne nouvelle : à quelques jours près, c'est possible &#128071;</div>";
+        alts.forEach(function (al) {
+          html += "<div class='optline'>";
+          html += "<span class='seg'>" + esc(al.p.code) + " <small>" + frShort(al.a) + " &#8594; " + frShort(al.d) + "</small></span>";
+          html += "<span class='segdet'>" + (al.total != null ? "<strong>" + Math.round(al.total) + " €</strong> <small>(ménage inclus)</small>" : "") + (al.count > 1 ? " &middot; " + al.count + " logements dispo" : "") + "</span>";
+          html += "<a class='book' href='#' data-alta='" + al.a + "' data-altd='" + al.d + "'>Choisir ces dates</a>";
+          html += "</div>";
+        });
+      } else {
+        html += "<p class='empty'>Aucune disponibilité non plus à &plusmn;14 jours. Essayez une autre période ou une durée plus courte.</p>";
+      }
     }
     if (combos.length && (free.length === 0)) {
       combos.forEach(function (c, ci) {
@@ -473,7 +514,9 @@
     if (a < t) { setStatus("La date d'arrivée est déjà passée.", true); return; }
     selection = { a: a, d: d };
     document.getElementById("clear").style.display = "";
-    ensure(a, d, function () {
+    var wideA = addDays(a, -14);
+    if (wideA < t) wideA = t;
+    ensure(wideA, addDays(d, 14), function () {
       viewStart = a;
       renderGrid();
       renderResults(a, d);
@@ -567,8 +610,15 @@
   if (document.addEventListener) {
     document.addEventListener("click", function (e) {
       var t = e.target;
-      var el = t && t.closest ? t.closest("[data-prop],[data-gal],[data-close]") : null;
+      var el = t && t.closest ? t.closest("[data-prop],[data-gal],[data-close],[data-alta]") : null;
       if (el) {
+        if (el.getAttribute("data-alta")) {
+          e.preventDefault();
+          document.getElementById("din").value = el.getAttribute("data-alta");
+          document.getElementById("dout").value = el.getAttribute("data-altd");
+          document.getElementById("go").click();
+          return;
+        }
         if (el.getAttribute("data-prop")) { e.preventDefault(); openProp(parseInt(el.getAttribute("data-prop"), 10)); return; }
         if (el.getAttribute("data-gal")) { galShow(parseInt(el.getAttribute("data-gal"), 10)); return; }
         if (el.getAttribute("data-close")) { e.preventDefault(); closeProp(); return; }

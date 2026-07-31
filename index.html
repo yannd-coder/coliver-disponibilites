@@ -171,7 +171,10 @@
     .rescard { padding: 16px; }
     .rescard h3 { font-size: 20px; }
     .combo { padding: 8px 10px; }
-    .seg { flex: 1 1 100%; }
+    .comboline { display: grid; grid-template-columns: 1fr auto; column-gap: 10px; row-gap: 8px; align-items: center; }
+    .comboline .seg { grid-column: 1 / -1; justify-self: start; }
+    .comboline .segdet { grid-column: 1; }
+    .comboline .book { grid-column: 2; margin-left: 0; justify-self: end; }
     .book { padding: 7px 13px; font-size: 12.5px; }
     .combototal strong { font-size: 18px; }
     #dpick { width: calc(100vw - 40px); max-width: 312px; }
@@ -524,11 +527,13 @@
         var t = sumPrice(p, days);
         var fee = p.cleaningFee || 0;
         var ms = p.minStay || 1;
-        html += "<div class='optline'><span class='seg' data-prop='" + p.id + "' title='Voir le logement'>" + esc(p.code) + EYE + "</span><span style='font-size:13px;color:#6b7280'>" + esc(p.kind) + "</span>";
-        html += "<span class='tot'>" + (t != null ? Math.round(t + fee) + " € <small>total" + (fee ? ", dont " + Math.round(fee) + " € ménage" : "") + "</small>" : "") + "</span>";
+        html += "<div class='combo'><div class='comboline'>";
+        html += "<span class='seg' data-prop='" + p.id + "' title='Voir le logement'>" + esc(p.code) + EYE + "</span>";
+        html += "<span class='segdet'>" + esc(p.kind) + (p.maxPeople ? " &middot; " + p.maxPeople + " pers." : "") + (t != null ? " &middot; <strong>" + Math.round(t + fee) + " €</strong>" + (fee ? " <small>(dont " + Math.round(fee) + " € ménage)</small>" : "") : "") + "</span>";
         if (p.bookingUrl) html += "<a class='book' href='" + p.bookingUrl + "' target='_blank' rel='noopener'>Réserver</a>";
         html += "</div>";
         if (nights < ms) html += "<div class='note'>&#9888; Séjour minimum de " + ms + " nuits pour ce logement.</div>";
+        html += "</div>";
       });
     }
 
@@ -538,11 +543,11 @@
       if (alts.length) {
         html += "<div class='alttitle'>Bonne nouvelle : à quelques jours près, c'est possible &#128071;</div>";
         alts.forEach(function (al) {
-          html += "<div class='optline'>";
+          html += "<div class='combo'><div class='comboline'>";
           html += "<span class='seg' data-prop='" + al.p.id + "' title='Voir le logement'>" + esc(al.p.code) + EYE + " <small>" + frShort(al.a) + " &#8594; " + frShort(al.d) + "</small></span>";
           html += "<span class='segdet'>" + (al.total != null ? "<strong>" + Math.round(al.total) + " €</strong> <small>(ménage inclus)</small>" : "") + (al.count > 1 ? " &middot; " + al.count + " logements dispo" : "") + "</span>";
           html += "<a class='book' href='#' data-alta='" + al.a + "' data-altd='" + al.d + "'>Choisir ces dates</a>";
-          html += "</div>";
+          html += "</div></div>";
         });
       } else {
         html += "<p class='empty'>Aucune disponibilité non plus à &plusmn;14 jours. Essayez une autre période ou une durée plus courte.</p>";

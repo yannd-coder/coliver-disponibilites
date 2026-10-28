@@ -5,181 +5,266 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" href="Atelia.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <title>Villa Coliver — Disponibilités</title>
 <style>
+  @font-face { font-family: "Atelia"; src: url("Atelia.woff2") format("woff2"); font-weight: 400; font-display: swap; }
   :root {
-    --bg: hsl(36 38% 96%); --paper: hsl(36 30% 92%); --paper-deep: hsl(32 22% 88%);
-    --ink: hsl(24 30% 14%); --muted: hsl(24 12% 42%);
-    --gold: hsl(32 70% 42%); --gold-dark: hsl(28 65% 38%); --gold-deep: hsl(28 65% 33%);
-    --green: hsl(152 26% 26%); --green-bg: hsl(150 32% 90%); --green-bd: hsl(150 25% 78%);
-    --border: hsl(32 14% 84%); --hair: hsl(32 16% 87%); --card: #fff;
-    --radius: 18px;
-    --shadow-card: 0 1px 2px hsl(24 30% 14% / .05), 0 10px 30px hsl(24 30% 14% / .07);
-    --font-display: "Fraunces", Georgia, "Times New Roman", serif;
-    --font-body: "Geist", system-ui, -apple-system, sans-serif;
+    /* charte coliver.re */
+    --jaune: #FFD100; --jaune-hover: #f2c400;
+    --vert: #2D7938; --vert-fonce: #1C4620; --vert-nuit: #143a1a;
+    --brun: #2F1107; --gris: #5b4a3e; --gris-clair: #8a7a6e;
+    --creme: #f6f1e6; --creme-clair: #faf7f2; --bord: #efe7d8; --bord-fort: #e2d8c5; --card: #fff;
+    --free: #e3f0dd; --free-we: #d8eacf; --free-ink: #1C4620; --busy: #f7d9d5; --busy-bd: #efc4be;
+    --radius: 16px;
+    --shadow: 0 1px 2px rgba(47,17,7,.05), 0 8px 26px rgba(47,17,7,.07);
+    --font-display: "Atelia", "Raleway", Georgia, serif;
+    --font-body: "Raleway", system-ui, -apple-system, "Segoe UI", sans-serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: var(--font-body); color: var(--ink); background: var(--bg); min-height: 100vh; padding-bottom: 80px; }
-  .eyebrow { font-size: 11.5px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-dark); }
-  header.top { border-bottom: 1px solid var(--hair); }
-  .top-in { max-width: 1200px; margin: 0 auto; padding: 14px 20px; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-  .brand { font-family: var(--font-display); font-size: 19px; color: var(--ink); }
-  .brand strong { font-weight: 700; }
-  .brand em { font-style: italic; color: var(--muted); font-weight: 400; }
-  .topright { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
-  .hero2 { max-width: 1200px; margin: 0 auto; padding: 42px 20px 6px; }
-  .hero2 h1 { font-family: var(--font-display); font-size: 44px; font-weight: 600; letter-spacing: -.03em; line-height: 1.04; margin-top: 12px; }
-  .hero2 h1 em { font-style: italic; color: var(--gold); }
-  .lede { font-family: var(--font-display); font-style: italic; font-size: 17px; color: hsl(24 20% 32%); line-height: 1.55; margin-top: 14px; max-width: 620px; }
-  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-  .guide { background: var(--card); border-radius: var(--radius); padding: 18px 20px; margin-top: 24px; box-shadow: var(--shadow-card); }
-  .guide-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  .guide-title { font-family: var(--font-display); font-size: 22px; font-weight: 600; letter-spacing: -.02em; margin-top: 4px; }
-  .guide-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 14px; }
-  .gstep { display: flex; gap: 10px; align-items: flex-start; }
-  .gnum { flex: none; width: 26px; height: 26px; border-radius: 999px; background: var(--gold-dark); color: #fff; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
-  .gstep strong { font-size: 13.5px; display: block; margin-bottom: 3px; }
-  .gstep p { font-family: var(--font-display); font-style: italic; font-size: 12.5px; color: var(--muted); line-height: 1.5; }
-  .searchbar { background: var(--card); border-radius: var(--radius); border: 1.5px solid hsl(32 45% 78%); padding: 22px 26px 24px; margin: 28px auto 0; max-width: 760px; box-shadow: 0 12px 36px hsl(32 60% 30% / .14); text-align: center; }
-  .sb-controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: end; justify-content: center; margin-top: 14px; text-align: left; }
-  .field label { display: block; font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-dark); margin-bottom: 6px; }
-  .field input { border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 12px; font-size: 15px; font-family: var(--font-body); background: #fff; color: var(--ink); }
-  .btn { border: 0; border-radius: 12px; padding: 13px 24px; font-size: 16px; font-weight: 600; font-family: var(--font-body); cursor: pointer; }
-  .btn-primary { background: var(--gold-dark); color: hsl(36 38% 97%); transition: background .15s ease; }
-  .btn-primary:hover { background: var(--gold-deep); }
-  .btn-ghost { background: transparent; color: var(--muted); text-decoration: underline; font-size: 13px; padding: 12px 6px; }
+  body { font-family: var(--font-body); color: var(--brun); background: var(--creme-clair); min-height: 100vh; padding-bottom: 60px; line-height: 1.45; }
+  svg { display: inline-block; vertical-align: middle; flex: none; }
+  .kicker { font-size: 13px; font-weight: 800; text-transform: uppercase; color: var(--vert-fonce); letter-spacing: .02em; }
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 20px; }
+
+  /* en-tête */
+  header.top { background: #fff; border-bottom: 1px solid var(--bord); }
+  .top-in { max-width: 1160px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { text-decoration: none; color: var(--vert-fonce); display: flex; flex-direction: column; line-height: 1; }
+  .brand b { font-family: var(--font-display); font-weight: 400; font-size: 30px; letter-spacing: -.01em; }
+  .brand b span { color: var(--jaune); }
+  .brand small { font-size: 9.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--brun); margin-top: 3px; }
+  .toplink { font-size: 12.5px; font-weight: 700; text-transform: uppercase; text-decoration: none; color: #fff; background: var(--vert-fonce); padding: 10px 16px; border-radius: 4px; white-space: nowrap; }
+  .toplink:hover { background: var(--vert); }
+
+  /* hero + recherche */
+  .hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 36px; align-items: center; padding-top: 44px; }
+  .hero h1 { font-family: var(--font-display); font-weight: 400; color: var(--vert-fonce); font-size: clamp(36px, 4.6vw, 54px); line-height: 1.05; margin-top: 14px; letter-spacing: -.01em; }
+  .hero h1 em { font-style: normal; color: var(--vert); }
+  .lede { font-size: 15.5px; color: var(--gris); line-height: 1.6; margin-top: 16px; max-width: 460px; }
+  .searchbar { background: var(--card); border: 1px solid var(--bord); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; display: grid; grid-template-columns: minmax(0, 1fr) 170px; gap: 22px; }
+  .sb-main { min-width: 0; align-self: center; }
+  .field label { display: block; font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--brun); margin-bottom: 8px; }
   .dfield { position: relative; }
-  .dbtn { border: 1.5px solid var(--border); border-radius: 12px; padding: 12px 16px; font-size: 16px; font-family: var(--font-body); background: #fff; color: var(--ink); cursor: pointer; min-width: 250px; text-align: left; }
-  .dbtn:hover { border-color: var(--gold); }
-  #dpick { display: none; position: absolute; top: calc(100% + 6px); left: 0; z-index: 30; background: var(--card); border: 1px solid var(--hair); border-radius: 16px; box-shadow: var(--shadow-card), 0 16px 44px hsl(24 30% 14% / .16); padding: 12px; width: 312px; }
+  .dbtn { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px; border: 1.5px solid var(--bord-fort); border-radius: 10px; padding: 13px 14px; font: 500 15.5px var(--font-body); background: #fff; color: var(--brun); cursor: pointer; text-align: left; transition: border-color .15s; }
+  .dbtn:hover, .dbtn:focus-visible { border-color: var(--vert); outline: none; }
+  .dbtn.ph { color: var(--gris-clair); }
+  .dbtn svg { color: var(--vert-fonce); }
+  .sb-actions { display: flex; gap: 10px; align-items: center; margin-top: 16px; }
+  .btn { border: 0; border-radius: 6px; font: 800 14px var(--font-body); text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-primary { flex: 1; background: var(--jaune); color: var(--brun); padding: 15px 22px; transition: background .15s; }
+  .btn-primary:hover { background: var(--jaune-hover); }
+  .btn-ghost { background: transparent; color: var(--gris); text-decoration: underline; text-transform: none; font-weight: 600; font-size: 13px; padding: 12px 6px; }
+  .sb-aside { background: var(--creme-clair); border: 1px solid var(--bord); border-radius: 12px; padding: 16px 14px; font-size: 12.5px; color: var(--gris); line-height: 1.55; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+  .sb-aside svg { color: var(--vert-fonce); }
+  #status { font-size: 13px; color: var(--gris); margin: 12px 2px 0; min-height: 0; }
+  #status:empty { display: none; }
+  .err { color: #b3261e; }
+
+  /* sélecteur de dates */
+  #dpick { display: none; position: absolute; top: calc(100% + 6px); left: 0; z-index: 30; background: var(--card); border: 1px solid var(--bord); border-radius: 14px; box-shadow: 0 18px 44px rgba(47,17,7,.18); padding: 12px; width: 312px; }
   .phead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-  .plabel { font-family: var(--font-display); font-weight: 600; font-size: 15px; text-transform: capitalize; }
-  .pnav { border: 1px solid var(--border); background: #fff; border-radius: 8px; width: 28px; height: 28px; cursor: pointer; font-size: 14px; }
+  .plabel { font-weight: 800; font-size: 14px; text-transform: capitalize; color: var(--vert-fonce); }
+  .pnav { border: 1px solid var(--bord-fort); background: #fff; border-radius: 8px; width: 30px; height: 30px; cursor: pointer; font-size: 15px; color: var(--brun); }
+  .pnav:hover { border-color: var(--vert); }
   .pgrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
-  .pdn { font-size: 10px; color: var(--muted); text-align: center; padding: 3px 0; text-transform: uppercase; letter-spacing: .08em; }
-  .pday { border: 0; background: transparent; height: 36px; border-radius: 9px; font-size: 13px; font-family: var(--font-body); color: var(--ink); cursor: pointer; }
-  .pday:hover { background: var(--paper); }
+  .pdn { font-size: 10px; font-weight: 700; color: var(--gris-clair); text-align: center; padding: 3px 0; text-transform: uppercase; }
+  .pday { border: 0; background: transparent; height: 38px; border-radius: 8px; font: 600 13px var(--font-body); color: var(--brun); cursor: pointer; }
+  .pday:hover { background: var(--free); }
   .pday.pdis { opacity: .3; pointer-events: none; }
-  .pday.pin { background: hsl(32 70% 42% / .13); }
-  .pday.psel { background: var(--gold-dark); color: #fff; font-weight: 700; }
-  .phint { font-family: var(--font-display); font-style: italic; font-size: 12.5px; color: var(--muted); margin-top: 8px; text-align: center; }
-  .legend { display: flex; gap: 18px; align-items: center; font-size: 12.5px; color: var(--muted); margin: 30px 2px 0; padding-top: 18px; border-top: 1px solid var(--hair); flex-wrap: wrap; }
-  .chip { display: inline-block; width: 13px; height: 13px; border-radius: 4px; vertical-align: -2px; margin-right: 6px; }
-  .chip.free { background: var(--green-bg); border: 1px solid var(--green-bd); }
-  .chip.busy { background: var(--paper-deep); border: 1px solid var(--border); }
-  .gridnav { display: flex; align-items: center; gap: 8px; margin: 10px 0 12px; }
-  .gridnav .title { font-family: var(--font-display); font-style: italic; font-size: 21px; font-weight: 500; letter-spacing: -.01em; text-transform: capitalize; flex: 1; }
-  .navbtn { border: 1px solid var(--border); background: #fff; border-radius: 10px; width: 36px; height: 36px; font-size: 17px; color: var(--ink); cursor: pointer; }
-  .navbtn:hover, .todaybtn:hover { border-color: var(--gold); color: var(--gold-dark); }
-  .todaybtn { border: 1px solid var(--border); background: #fff; border-radius: 10px; height: 36px; padding: 0 15px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); cursor: pointer; }
-  .gridbox { overflow-x: auto; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow-card); }
+  .pday.pin { background: var(--free); border-radius: 0; }
+  .pday.psel { background: var(--vert-fonce); color: #fff; font-weight: 800; }
+  .phint { font-size: 12.5px; color: var(--gris); margin-top: 8px; text-align: center; }
+
+  /* propositions */
+  #results:empty { display: none; }
+  .props { background: #fff; border: 1px solid var(--bord); border-radius: var(--radius); padding: 22px; margin-top: 30px; box-shadow: var(--shadow); }
+  .props-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .props-head svg { color: var(--vert-fonce); }
+  .props-head h2 { font-family: var(--font-display); font-weight: 400; font-size: 26px; color: var(--vert-fonce); line-height: 1.1; }
+  .count { background: var(--vert-fonce); color: #fff; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+  .props-dates { font-size: 14px; color: var(--gris); margin: 6px 0 4px 38px; }
+  .props-dates strong { color: var(--brun); }
+  .gtitle { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--vert-fonce); margin: 22px 0 10px; }
+  .rcard { display: grid; grid-template-columns: 230px minmax(0, 1fr) 190px; border: 1px solid var(--bord); border-radius: 14px; margin-top: 12px; overflow: hidden; background: #fff; transition: box-shadow .15s, border-color .15s; }
+  .rcard:hover { border-color: var(--bord-fort); box-shadow: var(--shadow); }
+  .rimg { position: relative; background: var(--creme); cursor: pointer; min-height: 132px; }
+  .rimg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .rbadge { position: absolute; top: 10px; left: 10px; background: #6d3fd6; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 6px; }
+  .rbody { padding: 18px 20px; min-width: 0; }
+  .rname { font-weight: 800; font-size: 18px; text-transform: uppercase; color: var(--brun); cursor: pointer; display: inline-block; }
+  .rname:hover { color: var(--vert); }
+  .rkind { font-size: 13.5px; color: var(--gris); margin-top: 2px; }
+  .rdates { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; color: var(--brun); margin-top: 12px; }
+  .rdates svg { color: var(--vert-fonce); margin-top: 1px; }
+  .rlink { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; color: var(--vert); text-decoration: none; margin-top: 10px; cursor: pointer; }
+  .rlink:hover { text-decoration: underline; }
+  .rprice { border-left: 1px solid var(--bord); padding: 18px 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 4px; }
+  .rprice .pt { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .rprice strong { font-size: 24px; font-weight: 800; color: var(--brun); line-height: 1; }
+  .rprice small { font-size: 11.5px; color: var(--gris); }
+  .book { display: inline-flex; align-items: center; justify-content: center; background: var(--jaune); color: var(--brun); border-radius: 6px; padding: 10px 22px; font-size: 12.5px; font-weight: 800; text-transform: uppercase; text-decoration: none; white-space: nowrap; transition: background .15s; margin-top: 10px; }
+  .book:hover { background: var(--jaune-hover); }
+  .note { font-size: 12.5px; color: var(--gris); margin-top: 10px; line-height: 1.5; }
+  .empty { font-size: 15px; color: var(--gris); line-height: 1.55; margin-top: 16px; }
+
+  /* combinaison */
+  .ccard { border: 1px solid var(--bord); border-radius: 14px; margin-top: 12px; padding: 6px 18px 14px; }
+  .ctitle { font-size: 11.5px; font-weight: 800; text-transform: uppercase; color: var(--gris-clair); margin: 10px 0 2px; }
+  .cline { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto auto; gap: 14px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--bord); }
+  .cthumb { width: 64px; height: 48px; border-radius: 8px; object-fit: cover; cursor: pointer; background: var(--creme); display: block; }
+  .cline .rname { font-size: 15px; }
+  .cline .rkind { font-size: 12.5px; }
+  .cprice { text-align: right; font-size: 12px; color: var(--gris); white-space: nowrap; }
+  .cprice strong { display: block; font-size: 17px; font-weight: 800; color: var(--brun); }
+  .cline .book { margin-top: 0; padding: 9px 16px; }
+  .cdates { font-size: 12.5px; color: var(--brun); margin-top: 2px; }
+  .ctotal { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding-top: 12px; font-size: 13px; color: var(--gris); flex-wrap: wrap; }
+  .ctotal strong { font-size: 22px; font-weight: 800; color: var(--brun); margin-left: 6px; }
+
+  /* « voir les autres propositions » */
+  #more[hidden] { display: none; }
+  .morebtn { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 18px auto 0; background: none; border: 0; font: 800 13.5px var(--font-body); text-transform: uppercase; color: var(--vert-fonce); cursor: pointer; padding: 8px 10px; }
+  .morebtn:hover { color: var(--vert); text-decoration: underline; }
+  .morebtn svg, .calhead .chev { transition: transform .2s; }
+  .morebtn.on svg, .calacc.open .calhead .chev { transform: rotate(180deg); }
+
+  /* calendrier global (accordéon) */
+  .calacc { background: #fff; border: 1px solid var(--bord); border-radius: var(--radius); margin-top: 26px; box-shadow: var(--shadow); overflow: hidden; scroll-margin-top: 16px; }
+  .calhead { width: 100%; display: flex; align-items: center; gap: 12px; background: var(--vert-fonce); color: #fff; border: 0; padding: 16px 22px; cursor: pointer; text-align: left; font: 700 17px var(--font-body); }
+  .calhead:hover { background: var(--vert-nuit); }
+  .calhead .lbl { flex: 1; }
+  .calhead .sub { display: block; font-size: 12.5px; font-weight: 500; opacity: .8; margin-top: 2px; }
+  .calbody { padding: 18px 20px 22px; }
+  .calbody[hidden] { display: none; }
+  .calinfo { display: flex; gap: 8px; align-items: center; background: #eef5ea; border: 1px solid #d7e8cf; color: var(--vert-fonce); border-radius: 8px; padding: 9px 12px; font-size: 12.5px; font-weight: 600; }
+  .legend { display: flex; gap: 22px; align-items: center; font-size: 12.5px; color: var(--gris); margin: 14px 2px 0; flex-wrap: wrap; }
+  .chip { display: inline-block; width: 22px; height: 14px; border-radius: 4px; vertical-align: -2px; margin-right: 7px; }
+  .chip.free { background: var(--free); border: 1px solid #c9e0bf; }
+  .chip.busy { background: var(--busy); border: 1px solid var(--busy-bd); }
+  .chip.sel { background: #fff; border: 2px solid var(--vert-fonce); }
+  .chip.none { background: repeating-linear-gradient(45deg, #f3efe8, #f3efe8 3px, #e9e3d8 3px, #e9e3d8 6px); border: 1px solid var(--bord); }
+  .gridnav { display: flex; align-items: center; gap: 8px; margin: 16px 0 12px; }
+  .gridnav .title { font-weight: 800; font-size: 15px; text-transform: uppercase; color: var(--vert-fonce); flex: 1; }
+  .navbtn { border: 1px solid var(--bord-fort); background: #fff; border-radius: 8px; width: 36px; height: 36px; font-size: 17px; color: var(--brun); cursor: pointer; }
+  .navbtn:hover, .todaybtn:hover { border-color: var(--vert); color: var(--vert-fonce); }
+  .todaybtn { border: 1px solid var(--bord-fort); background: #fff; border-radius: 8px; height: 36px; padding: 0 14px; font: 700 12px var(--font-body); text-transform: uppercase; color: var(--gris); cursor: pointer; }
+  .gridbox { overflow-x: auto; border: 1px solid var(--bord); border-radius: 12px; }
   table.cal { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 100%; }
-  table.cal th, table.cal td { border-bottom: 1px solid hsl(32 16% 93%); }
-  th.room, td.room { position: sticky; left: 0; background: var(--card); z-index: 2; text-align: left; padding: 9px 14px; min-width: 150px; max-width: 190px; border-right: 1px solid var(--hair); }
-  th.room { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-dark); }
-  td.room .code { font-family: var(--font-display); font-weight: 600; font-size: 15px; letter-spacing: -.01em; }
-  td.room .kind { font-family: var(--font-display); font-style: italic; font-size: 12px; color: var(--muted); margin-top: 1px; }
-  td.room a { font-size: 11.5px; color: var(--gold-dark); font-weight: 600; text-decoration: none; }
-  td.room a:hover { text-decoration: underline; }
-  th.day { font-size: 10.5px; color: var(--muted); font-weight: 500; padding: 7px 0 6px; min-width: 38px; text-align: center; }
-  th.day .num { display: block; font-family: var(--font-display); font-size: 14px; font-weight: 600; color: var(--ink); }
-  th.day.we { background: hsl(36 30% 94%); }
-  th.day.today .num { color: var(--gold); }
-  th.month { text-align: left; font-size: 11px; color: var(--gold-dark); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; padding: 10px 6px 0; }
-  td.c { min-width: 38px; height: 44px; text-align: center; font-size: 11px; padding: 0; }
-  td.c.free { background: var(--green-bg); color: var(--green); font-weight: 600; }
-  td.c.busy { background: repeating-linear-gradient(45deg, hsl(32 22% 92%), hsl(32 22% 92%) 5px, hsl(30 18% 89%) 5px, hsl(30 18% 89%) 10px); }
-  td.c.free.sel { background: hsl(150 42% 82%); box-shadow: inset 0 0 0 2px var(--gold-dark); color: hsl(152 30% 20%); font-weight: 700; }
-  td.c.dim { opacity: .35; }
-  td.c.we.free { background: hsl(150 30% 87%); }
-  .roomrow { display: flex; gap: 9px; align-items: center; }
-  .rthumb { width: 46px; height: 46px; border-radius: 10px; object-fit: cover; cursor: pointer; flex: none; }
+  table.cal th, table.cal td { border-bottom: 1px solid #f1ece3; }
+  th.room, td.room { position: sticky; left: 0; background: #fff; z-index: 2; text-align: left; padding: 8px 12px; min-width: 170px; max-width: 200px; border-right: 1px solid var(--bord); }
+  th.room { font-size: 11.5px; font-weight: 800; text-transform: uppercase; color: var(--brun); }
+  td.room .code { font-weight: 800; font-size: 13.5px; }
+  td.room .kind { font-size: 11.5px; color: var(--gris); margin-top: 1px; }
+  th.day { font-size: 9.5px; font-weight: 700; color: var(--gris-clair); text-transform: uppercase; padding: 6px 0; min-width: 40px; text-align: center; border-left: 1px solid #f1ece3; }
+  th.day .num { display: block; font-size: 14px; font-weight: 800; color: var(--brun); }
+  th.day.we { background: var(--creme-clair); }
+  th.day.today .num { color: var(--vert); text-decoration: underline; text-underline-offset: 3px; }
+  th.day.insel { background: var(--vert-fonce); color: rgba(255,255,255,.8); }
+  th.day.insel .num { color: #fff; }
+  th.month { text-align: center; font-size: 11px; color: var(--vert-fonce); font-weight: 800; text-transform: uppercase; padding: 9px 6px 2px; }
+  td.c { min-width: 40px; height: 46px; text-align: center; font-size: 10.5px; padding: 0; border-left: 1px solid #fff; background: repeating-linear-gradient(45deg, #f6f2ec, #f6f2ec 4px, #eee8de 4px, #eee8de 8px); }
+  td.c.free { background: var(--free); color: var(--free-ink); font-weight: 700; }
+  td.c.we.free { background: var(--free-we); }
+  td.c.busy { background: var(--busy); }
+  /* sélection : un seul rectangle autour de la période, toutes lignes confondues */
+  td.c.sel.s0 { box-shadow: inset 2px 0 0 var(--vert-fonce); }
+  td.c.sel.s1 { box-shadow: inset -2px 0 0 var(--vert-fonce); }
+  td.c.sel.s0.s1 { box-shadow: inset 2px 0 0 var(--vert-fonce), inset -2px 0 0 var(--vert-fonce); }
+  tbody tr:first-child td.c.sel { box-shadow: inset 0 2px 0 var(--vert-fonce); }
+  tbody tr:first-child td.c.sel.s0 { box-shadow: inset 2px 2px 0 var(--vert-fonce); }
+  tbody tr:first-child td.c.sel.s1 { box-shadow: inset -2px 2px 0 var(--vert-fonce); }
+  tbody tr:first-child td.c.sel.s0.s1 { box-shadow: inset 2px 2px 0 var(--vert-fonce), inset -2px 0 0 var(--vert-fonce); }
+  tbody tr:last-child td.c.sel { box-shadow: inset 0 -2px 0 var(--vert-fonce); }
+  tbody tr:last-child td.c.sel.s0 { box-shadow: inset 2px -2px 0 var(--vert-fonce); }
+  tbody tr:last-child td.c.sel.s1 { box-shadow: inset -2px -2px 0 var(--vert-fonce); }
+  tbody tr:last-child td.c.sel.s0.s1 { box-shadow: inset 2px -2px 0 var(--vert-fonce), inset -2px 0 0 var(--vert-fonce); }
+  td.c.sel { border-bottom-color: transparent; }
+  td.c.free.sel { background: #cfe6c4; }
+  td.c.dim { opacity: .55; }
+  .roomrow { display: flex; gap: 10px; align-items: center; }
+  .rthumb { width: 52px; height: 40px; border-radius: 7px; object-fit: cover; cursor: pointer; flex: none; }
   .rinfo { min-width: 0; }
   .rlinks { display: flex; gap: 9px; font-size: 11.5px; margin-top: 2px; }
-  .rlinks a { color: var(--gold-dark); font-weight: 600; text-decoration: none; }
+  .rlinks a { color: var(--vert); font-weight: 700; text-decoration: none; }
   .rlinks a:hover { text-decoration: underline; }
-  #results { margin-top: 26px; }
-  .rescard { background: var(--card); border-radius: 20px; padding: 22px; margin-bottom: 14px; box-shadow: var(--shadow-card); }
-  .rescard h3 { font-family: var(--font-display); font-size: 26px; font-weight: 600; letter-spacing: -.02em; margin: 6px 0 8px; }
-  .optline { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid hsl(32 16% 93%); }
-  .optline:first-of-type { border-top: 0; }
-  .seg { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-bd); border-radius: 10px; padding: 5px 11px; font-size: 13px; font-weight: 600; }
-  .seg[data-prop] { cursor: pointer; transition: background .12s ease; }
-  .segeye { display: inline-block; vertical-align: -2px; margin-left: 6px; opacity: .7; }
-  .seg[data-prop]:hover .segeye { opacity: 1; }
-  .seg[data-prop]:hover { background: hsl(150 38% 84%); text-decoration: underline; }
-  .arrow { color: var(--muted); }
-  .tot { margin-left: auto; font-size: 13px; color: var(--muted); white-space: nowrap; }
-  .tot { font-weight: 500; }
-  .tot small { color: var(--muted); font-weight: 400; }
-  .book { background: var(--gold-dark); color: hsl(36 38% 97%); border-radius: 10px; padding: 8px 15px; font-size: 13px; font-weight: 600; text-decoration: none; white-space: nowrap; transition: background .15s ease; }
-  .book:hover { background: var(--gold-deep); }
-  .combo { background: hsl(36 33% 97%); border: 1px solid var(--hair); border-radius: 14px; padding: 10px 14px; margin-top: 10px; }
-  .combotitle { font-size: 10.5px; font-weight: 600; letter-spacing: .14em; color: var(--muted); text-transform: uppercase; margin: 4px 0 2px; }
-  .comboline { display: flex; align-items: center; gap: 10px; padding: 7px 0; flex-wrap: wrap; }
-  .comboline .book { margin-left: auto; }
-  .segdet { font-size: 13px; color: var(--muted); }
-  .segdet strong { color: var(--ink); font-size: 14px; }
-  .combototal { border-top: 1px solid hsl(32 16% 90%); margin-top: 5px; padding: 10px 0 4px; font-size: 13px; color: var(--muted); }
-  .combototal strong { font-family: var(--font-display); font-size: 21px; color: var(--ink); font-weight: 600; margin: 0 2px; }
-  .alttitle { font-size: 11.5px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-dark); margin: 18px 0 6px; }
-  .note { font-family: var(--font-display); font-style: italic; font-size: 12.5px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
-  .empty { font-family: var(--font-display); font-style: italic; font-size: 15.5px; color: hsl(24 20% 32%); line-height: 1.5; }
-  #status { font-size: 13px; color: var(--muted); margin: 10px 2px; }
-  .err { color: hsl(8 70% 44%); }
-  #pmodal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: hsl(24 30% 10% / .5); backdrop-filter: blur(3px); z-index: 50; }
-  .pmcard { width: 50vw; min-width: 340px; max-width: 700px; max-height: 84vh; overflow-y: auto; background: var(--card); border-radius: 20px; box-shadow: 0 25px 60px hsl(24 30% 14% / .4); position: relative; }
-  .pmclose { position: absolute; top: 10px; right: 10px; z-index: 2; width: 32px; height: 32px; border: 0; border-radius: 999px; background: hsl(24 30% 14% / .5); color: #fff; font-size: 18px; cursor: pointer; line-height: 1; }
+
+  /* infos pratiques */
+  .infos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 26px; }
+  .info { background: #fff; border: 1px solid var(--bord); border-radius: 14px; padding: 18px; display: flex; gap: 12px; align-items: flex-start; }
+  .info .ico { width: 40px; height: 40px; border-radius: 10px; background: var(--creme); color: var(--vert-fonce); display: flex; align-items: center; justify-content: center; flex: none; }
+  .info strong { display: block; font-size: 14px; font-weight: 800; margin-bottom: 4px; }
+  .info p { font-size: 12.5px; color: var(--gris); line-height: 1.55; }
+
+  /* fiche logement (pop-up) */
+  #pmodal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(28,20,14,.55); backdrop-filter: blur(3px); z-index: 50; }
+  .pmcard { width: 50vw; min-width: 340px; max-width: 700px; max-height: 84vh; overflow-y: auto; background: var(--card); border-radius: 18px; box-shadow: 0 25px 60px rgba(47,17,7,.4); position: relative; }
+  .pmclose { position: absolute; top: 10px; right: 10px; z-index: 2; width: 34px; height: 34px; border: 0; border-radius: 999px; background: rgba(47,17,7,.55); color: #fff; font-size: 19px; cursor: pointer; line-height: 1; }
   .gal { position: relative; }
-  .gal img { width: 100%; height: 320px; object-fit: cover; display: block; border-radius: 20px 20px 0 0; background: var(--paper-deep); }
-  .galbtn { position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border: 0; border-radius: 999px; background: hsl(36 38% 97% / .92); color: var(--ink); font-size: 18px; cursor: pointer; }
+  .gal img { width: 100%; height: 320px; object-fit: cover; display: block; border-radius: 18px 18px 0 0; background: var(--creme); }
+  .galbtn { position: absolute; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; border: 0; border-radius: 999px; background: rgba(255,255,255,.92); color: var(--brun); font-size: 18px; cursor: pointer; }
   .galprev { left: 10px; } .galnext { right: 10px; }
-  .galcount { position: absolute; bottom: 10px; right: 12px; background: hsl(24 30% 14% / .55); color: #fff; font-size: 11px; padding: 3px 9px; border-radius: 999px; }
+  .galcount { position: absolute; bottom: 10px; right: 12px; background: rgba(47,17,7,.6); color: #fff; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; }
   .pmbody-in { padding: 18px 22px 22px; }
-  .pmtitle { font-family: var(--font-display); font-size: 27px; font-weight: 600; letter-spacing: -.02em; }
+  .pmtitle { font-weight: 800; font-size: 24px; text-transform: uppercase; }
   .badges { display: flex; gap: 8px; margin: 10px 0 12px; flex-wrap: wrap; }
-  .badge { background: var(--bg); border: 1px solid var(--hair); border-radius: 999px; padding: 3px 11px; font-size: 12px; color: var(--muted); font-weight: 500; }
-  .pmdesc { font-size: 13.5px; line-height: 1.6; color: hsl(24 20% 27%); }
-  .pmdesc h3 { font-family: var(--font-display); font-size: 16px; margin: 12px 0 4px; }
+  .badge { background: var(--creme); border: 1px solid var(--bord); border-radius: 999px; padding: 4px 11px; font-size: 12px; color: var(--gris); font-weight: 600; }
+  .pmdesc { font-size: 13.5px; line-height: 1.65; color: var(--gris); }
+  .pmdesc h3 { font-size: 15px; font-weight: 800; color: var(--brun); margin: 14px 0 4px; }
   .pmdesc p, .pmdesc ul { margin: 6px 0; }
   .pmdesc ul { padding-left: 18px; }
-  .pmload { padding: 40px 20px; text-align: center; color: var(--muted); font-size: 14px; }
+  .pmload { padding: 40px 20px; text-align: center; color: var(--gris); font-size: 14px; }
   .pmfoot { display: flex; gap: 12px; align-items: center; margin-top: 16px; }
+
+  @media (max-width: 960px) {
+    .hero { grid-template-columns: 1fr; gap: 22px; padding-top: 30px; }
+    .lede { max-width: none; }
+    .infos { grid-template-columns: 1fr 1fr; }
+    .rcard { grid-template-columns: 180px minmax(0, 1fr) 170px; }
+  }
   @media (max-width: 640px) {
-    .top-in { padding: 12px 14px; }
-    .hero2 { padding: 26px 14px 4px; }
-    .hero2 h1 { font-size: 31px; }
-    .lede { font-size: 15px; }
-    .wrap { padding: 0 12px; }
-    .searchbar { padding: 16px 14px 18px; }
-    .sb-controls { gap: 10px; }
-    .btn-primary { flex: 1 1 100%; }
-    th.room, td.room { min-width: 122px; max-width: 150px; padding: 6px 8px; }
+    .wrap { padding: 0 16px; }
+    .top-in { padding: 10px 16px; }
+    .brand b { font-size: 25px; }
+    .toplink { padding: 8px 11px; font-size: 11px; }
+    .hero h1 { font-size: 34px; }
+    .lede { font-size: 14.5px; }
+    .searchbar { grid-template-columns: 1fr; padding: 18px 16px; gap: 14px; }
+    .sb-aside { flex-direction: row; text-align: left; padding: 12px; }
+    #dpick { width: calc(100vw - 64px); max-width: 320px; }
+    .props { padding: 16px 14px; margin-top: 22px; }
+    .props-head > svg { display: none; }
+    .props-head h2 { font-size: 22px; }
+    .props-dates { margin-left: 0; }
+    .rcard { grid-template-columns: 112px minmax(0, 1fr); }
+    .rimg { min-height: 0; }
+    .rbadge { top: 6px; left: 6px; font-size: 10px; padding: 3px 6px; }
+    .rbody { padding: 12px 14px; }
+    .rname { font-size: 16px; }
+    .rdates { margin-top: 8px; font-size: 12.5px; }
+    .rprice { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--bord); flex-direction: row; justify-content: space-between; text-align: left; padding: 12px 14px; gap: 10px; }
+    .rprice .pt { align-items: flex-start; gap: 3px; }
+    .rprice .book { margin-top: 0; }
+    .ccard { padding: 4px 12px 12px; }
+    .cline { grid-template-columns: 54px minmax(0, 1fr) auto; row-gap: 10px; column-gap: 12px; }
+    .cline > div:not(.cprice) { grid-column: 2 / -1; }
+    .cthumb { width: 54px; height: 42px; }
+    .cprice { grid-column: 1 / 3; text-align: left; }
+    .cprice strong { display: inline; margin-right: 6px; }
+    .calhead { padding: 14px 16px; font-size: 15.5px; }
+    .calbody { padding: 14px 12px 16px; }
+    .legend { gap: 10px 16px; }
+    th.room, td.room { min-width: 116px; max-width: 140px; padding: 6px 8px; }
     td.room .kind { display: none; }
-    td.room .code { font-size: 11.5px; letter-spacing: -.02em; white-space: nowrap; }
+    td.room .code { font-size: 11.5px; white-space: nowrap; }
     .roomrow { gap: 7px; }
-    .rthumb { width: 30px; height: 30px; border-radius: 8px; }
+    .rthumb { width: 32px; height: 32px; }
     .rlinks a.rbook { display: none; }
     th.day { min-width: 36px; }
-    td.c { min-width: 36px; height: 40px; font-size: 10px; }
-    td.c.free.sel { box-shadow: inset 0 0 0 1.5px var(--gold-dark); }
-    .guide { padding: 14px 16px; }
-    .guide-title { font-size: 19px; }
-    .guide-steps { grid-template-columns: 1fr; gap: 12px; }
-    .rescard { padding: 16px; }
-    .rescard h3 { font-size: 20px; }
-    .combo { padding: 8px 10px; }
-    .comboline { display: grid; grid-template-columns: 1fr auto; column-gap: 10px; row-gap: 8px; align-items: center; }
-    .comboline .seg { grid-column: 1 / -1; justify-self: start; }
-    .comboline .segdet { grid-column: 1; }
-    .comboline .book { grid-column: 2; margin-left: 0; justify-self: end; }
-    .book { padding: 7px 13px; font-size: 12.5px; }
-    .combototal strong { font-size: 18px; }
-    #dpick { width: calc(100vw - 40px); max-width: 312px; }
-    .dbtn { width: 100%; }
-    .field.dfield { flex: 1 1 100%; }
+    td.c { min-width: 36px; height: 42px; font-size: 10px; }
+    .infos { grid-template-columns: 1fr; gap: 10px; }
     .pmcard { width: 92vw; min-width: 0; }
     .gal img { height: 220px; }
   }
@@ -188,58 +273,72 @@
 <body>
 <header class="top">
   <div class="top-in">
-    <span class="brand">&#127796;&nbsp; <strong>Coliver</strong> <em>Villa</em></span>
-    <span class="topright">Saint-Pierre &middot; La Réunion</span>
+    <a class="brand" href="https://coliver.re/"><b>coliver<span>&#127796;</span></b><small>Coliving &amp; coworking</small></a>
+    <a class="toplink" href="https://coliver.re/sejourner/">&larr; Retour au site</a>
   </div>
 </header>
-<section class="hero2">
-  <div class="eyebrow">La villa &middot; 9 logements &middot; Coliving tropical</div>
-  <h1>Trouvez vos dates, <em>réservez.</em></h1>
-  <p class="lede">Les logements libres sur votre période — et quand aucun n'est disponible en continu, les combinaisons malines pour rester dans la villa en changeant simplement de chambre.</p>
-</section>
 <div class="wrap">
-  <div class="guide">
-    <div class="guide-head">
-      <div>
-        <div class="eyebrow">Mode d'emploi</div>
-        <h2 class="guide-title">Comment ça marche ?</h2>
+  <section class="hero">
+    <div>
+      <div class="kicker">Outil de recherche &middot; Disponibilités</div>
+      <h1>Trouvez vos dates, <em style="white-space:nowrap">réservez.&nbsp;&#127796;</em></h1>
+      <p class="lede">Les logements libres sur votre période — et quand aucun n'est disponible en continu, les combinaisons malines pour rester dans la villa en changeant simplement de chambre.</p>
+    </div>
+    <div>
+      <div class="searchbar">
+        <div class="sb-main">
+          <div class="field dfield">
+            <label for="drange">Dates du séjour</label>
+            <button type="button" id="drange" class="dbtn ph" data-dtoggle="1"><span id="drangetxt">Choisir vos dates</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><path d="M9 15l2 2 4-4"/></svg></button>
+            <div id="dpick"></div>
+            <input type="hidden" id="din"><input type="hidden" id="dout">
+          </div>
+          <div class="sb-actions">
+            <button class="btn btn-primary" id="go">Trouver mon séjour <span aria-hidden="true">&rarr;</span></button>
+            <button class="btn btn-ghost" id="clear" style="display:none">Effacer</button>
+          </div>
+        </div>
+        <div class="sb-aside">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="14" height="14" rx="2"/><path d="M3 9h14M7 2.5v4M13 2.5v4"/><circle cx="17.5" cy="17.5" r="4.5" fill="#fff"/><path d="M15.6 17.6l1.3 1.3 2.4-2.6"/></svg>
+          <span>Notre outil explore les disponibilités des 9 logements de la villa et, si besoin, combine plusieurs chambres pour couvrir tout votre séjour.</span>
+        </div>
       </div>
-      <button type="button" id="gtoggle" class="todaybtn">Masquer</button>
+      <div id="status"></div>
     </div>
-    <div class="guide-steps" id="gsteps">
-      <div class="gstep"><span class="gnum">1</span><div><strong>Choisissez vos dates</strong><p>Cliquez sur « Choisir vos dates », puis sélectionnez votre arrivée et votre départ dans le calendrier.</p></div></div>
-      <div class="gstep"><span class="gnum">2</span><div><strong>Découvrez nos propositions</strong><p>Les logements libres sur toute votre période s'affichent. S'il n'y en a pas, nous composons votre séjour en changeant de chambre en cours de route — ou nous vous suggérons des dates proches.</p></div></div>
-      <div class="gstep"><span class="gnum">3</span><div><strong>Explorez les logements</strong><p>Cliquez sur une photo, un nom en vert ou « Détails » pour ouvrir la fiche complète : photos, description, capacité.</p></div></div>
-      <div class="gstep"><span class="gnum">4</span><div><strong>Réservez en ligne</strong><p>Le bouton « Réserver » vous emmène sur notre site de réservation sécurisé. Pour une combinaison, réservez chaque logement séparément.</p></div></div>
-    </div>
-    <p class="note" id="glegend">Dans le calendrier ci-dessous : <span class="chip free"></span>vert = disponible (prix par nuit) &middot; <span class="chip busy"></span>hachuré = occupé. Naviguez dans le temps avec les flèches &#8249; &#8250;.</p>
-  </div>
-  <div class="searchbar">
-    <div class="sb-head eyebrow">Commencez ici &mdash; choisissez vos dates</div>
-    <div class="sb-controls">
-    <div class="field dfield">
-      <label>Dates du séjour</label>
-      <button type="button" id="drange" class="dbtn" data-dtoggle="1">Choisir vos dates</button>
-      <div id="dpick"></div>
-      <input type="hidden" id="din"><input type="hidden" id="dout">
-    </div>
-    <button class="btn btn-primary" id="go">Voir les disponibilités &#8594;</button>
-    <button class="btn btn-ghost" id="clear" style="display:none">Effacer</button>
-    </div>
-  </div>
+  </section>
+
   <div id="results"></div>
-  <div class="legend">
-    <span><span class="chip free"></span>Disponible (prix / nuit)</span>
-    <span><span class="chip busy"></span>Occupé</span>
-  </div>
-  <div class="gridnav">
-    <div class="title" id="gridtitle"></div>
-    <button class="todaybtn" id="tod">Aujourd'hui</button>
-    <button class="navbtn" id="prev">&#8249;</button>
-    <button class="navbtn" id="next">&#8250;</button>
-  </div>
-  <div class="gridbox"><table class="cal" id="cal"></table></div>
-  <div id="status"></div>
+
+  <section class="calacc" id="calacc">
+    <button type="button" class="calhead" id="caltoggle" aria-expanded="false" aria-controls="calbody">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><path d="M7.5 13.5h2M11 13.5h2M14.5 13.5h2M7.5 17h2M11 17h2"/></svg>
+      <span class="lbl">Voir le calendrier global<span class="sub">Disponibilités et prix de tous les logements, jour par jour</span></span>
+      <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="calbody" id="calbody" hidden>
+      <div class="calinfo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5M12 7.6v.1"/></svg>Les couleurs indiquent la disponibilité de chaque logement ; le prix par nuit est affiché dans les cases libres.</div>
+      <div class="legend">
+        <span><span class="chip free"></span>Disponible (prix / nuit)</span>
+        <span><span class="chip busy"></span>Occupé</span>
+        <span><span class="chip sel"></span>Vos dates</span>
+        <span><span class="chip none"></span>Non chargé</span>
+      </div>
+      <div class="gridnav">
+        <div class="title" id="gridtitle"></div>
+        <button class="todaybtn" id="tod">Aujourd'hui</button>
+        <button class="navbtn" id="prev" aria-label="Période précédente">&#8249;</button>
+        <button class="navbtn" id="next" aria-label="Période suivante">&#8250;</button>
+      </div>
+      <div class="gridbox"><table class="cal" id="cal"></table></div>
+    </div>
+  </section>
+
+  <section class="infos" aria-label="Comment ça marche">
+    <div class="info"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg></span><div><strong>Choisissez vos dates</strong><p>Cliquez sur « Choisir vos dates », puis sélectionnez votre arrivée et votre départ dans le calendrier.</p></div></div>
+    <div class="info"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h11l-3-3M20 17H9l3 3"/></svg></span><div><strong>Découvrez nos propositions</strong><p>Les logements libres sur toute votre période s'affichent. Sinon, nous composons votre séjour en changeant de chambre — ou nous suggérons des dates proches.</p></div></div>
+    <div class="info"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5.5 4.5 12 4.5 22.5 12 22.5 12 18.5 19.5 12 19.5 1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3"/></svg></span><div><strong>Explorez les logements</strong><p>Cliquez sur une photo ou un nom pour ouvrir la fiche complète : photos, description, capacité.</p></div></div>
+    <div class="info"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10.5" rx="2"/><path d="M8 10.5V7a4 4 0 018 0v3.5"/></svg></span><div><strong>Réservez en ligne</strong><p>« Réserver » ouvre notre site de réservation sécurisé. Pour une combinaison, réservez chaque logement séparément.</p></div></div>
+  </section>
 </div>
 <div id="pmodal"><div class="pmcard"><button class="pmclose" data-close="1" aria-label="Fermer">&times;</button><div id="pmbody"></div></div></div>
 <script>
@@ -258,9 +357,12 @@
     607748: SITE + "chambre-anjara---villa-coliving-pool-spa-coworking",
     607749: SITE + "chambre-kinoo---villa-coliving-pool-spa-coworking"
   };
-  // picto œil : signale que la puce ouvre la fiche photos
-  var EYE = "<span class='segeye'><svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 12s4-7.5 11-7.5S23 12 23 12s-4 7.5-11 7.5S1 12 1 12z'/><circle cx='12' cy='12' r='3'/></svg></span>";
+  // pictos
+  var EYE = "<svg viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 12s4-7.5 11-7.5S23 12 23 12s-4 7.5-11 7.5S1 12 1 12z'/><circle cx='12' cy='12' r='3'/></svg>";
+  var CAL = "<svg viewBox='0 0 24 24' width='16' height='16' fill='none' stroke='currentColor' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4.5' width='18' height='16.5' rx='2.5'/><path d='M3 9.5h18M8 2.5v4M16 2.5v4'/></svg>";
+  var CHEV = "<svg viewBox='0 0 24 24' width='18' height='18' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>";
   var VISIBLE = 31;        // jours affichés dans la grille
+  var SHOWN = 3;           // propositions visibles avant « Voir les autres propositions »
   var store = { props: [], daysById: {} };
   var viewStart = todayStr();
   var selection = null;    // {a, d} dates ISO
@@ -289,6 +391,8 @@
     return FR_D[dow(iso)] + " " + dayNum(iso) + " " + monthName(iso);
   }
   function frShort(iso) { return dayNum(iso) + " " + monthName(iso); }
+  function frNum(iso) { return FR_D[dow(iso)] + " " + iso.slice(8, 10) + "/" + iso.slice(5, 7); }
+  function nightsTxt(n) { return n + " nuit" + (n > 1 ? "s" : ""); }
 
   function setStatus(msg, isErr) {
     var s = document.getElementById("status");
@@ -343,6 +447,7 @@
     var selDays = selection ? listDays(selection.a, selection.d) : [];
     var selSet = {};
     selDays.forEach(function (x) { selSet[x] = 1; });
+    var selFirst = selDays[0], selLast = selDays[selDays.length - 1];
 
     var html = "<thead><tr><th class='room'></th>";
     // ligne des mois
@@ -357,11 +462,11 @@
       run++;
     });
     if (run > 0) mcells += "<th class='month' colspan='" + run + "'>" + runM + "</th>";
-    html += mcells + "</tr><tr><th class='room'>Logement</th>";
+    html += mcells + "</tr><tr><th class='room'>Logements</th>";
     days.forEach(function (dd) {
       var w = dow(dd);
-      var cls = "day" + ((w === 0 || w === 6) ? " we" : "") + (dd === today ? " today" : "");
-      html += "<th class='" + cls + "'>" + FR_D[w] + "<span class='num'>" + dayNum(dd) + "</span></th>";
+      var cls = "day" + ((w === 0 || w === 6) ? " we" : "") + (dd === today ? " today" : "") + (selSet[dd] ? " insel" : "");
+      html += "<th class='" + cls + "'><span class='num'>" + dayNum(dd) + "</span>" + FR_D[w].replace(".", "") + "</th>";
     });
     html += "</tr></thead><tbody>";
 
@@ -388,7 +493,7 @@
           title = esc(p.code) + " — " + frDate(dd) + " — occupé";
         }
         if (selection) {
-          if (selSet[dd]) { if (cell && cell.a === 1) cls += " sel"; }
+          if (selSet[dd]) { cls += " sel" + (dd === selFirst ? " s0" : "") + (dd === selLast ? " s1" : ""); }
           else cls += " dim";
         }
         html += "<td class='" + cls + "' title=\"" + title + "\">" + content + "</td>";
@@ -511,73 +616,135 @@
     return out;
   }
 
+  // ---------- cartes de résultats ----------
+  function kindTxt(p) { return esc(p.kind) + (p.maxPeople ? " &middot; " + (p.maxPeople > 1 ? "jusqu'à " : "") + p.maxPeople + " pers." : ""); }
+  function datesTxt(a, d) { return "Du " + frNum(a) + " au " + frNum(d) + " (" + nightsTxt(listDays(a, d).length) + ")"; }
+
+  function roomCard(p, a, d, opts) {
+    var days = listDays(a, d);
+    var t = sumPrice(p, days);
+    var fee = p.cleaningFee || 0;
+    var h = "<div class='rcard'>";
+    h += "<div class='rimg' data-prop='" + p.id + "' title='Voir le logement'>";
+    if (p.image) h += "<img src='" + p.image + "?w=600' alt='" + esc(p.code) + "' loading='lazy'>";
+    if (opts.badge) h += "<span class='rbadge'>" + opts.badge + "</span>";
+    h += "</div><div class='rbody'>";
+    h += "<span class='rname' data-prop='" + p.id + "'>" + esc(p.code) + "</span>";
+    h += "<div class='rkind'>" + kindTxt(p) + "</div>";
+    h += "<div class='rdates'>" + CAL + "<span>" + datesTxt(a, d) + "</span></div>";
+    h += "<a class='rlink' href='#' data-prop='" + p.id + "'>" + EYE + "Voir le logement</a>";
+    if (opts.note) h += "<div class='note'>" + opts.note + "</div>";
+    h += "</div><div class='rprice'><div class='pt'>";
+    if (opts.total != null) h += "<strong>" + Math.round(opts.total) + " €</strong>" + (opts.sub ? "<small>" + opts.sub + "</small>" : "");
+    else if (t != null) h += "<strong>" + Math.round(t + fee) + " €</strong>" + (fee ? "<small>dont " + Math.round(fee) + " € de ménage</small>" : "");
+    h += "</div>";
+    if (opts.action) h += opts.action;
+    else if (p.bookingUrl) h += "<a class='book' href='" + p.bookingUrl + "' target='_blank' rel='noopener'>Réserver</a>";
+    h += "</div></div>";
+    return h;
+  }
+
+  function comboCard(c, ci, count, nights) {
+    var h = "<div class='ccard'>";
+    if (count > 1) h += "<div class='ctitle'>Option " + (ci + 1) + "</div>";
+    c.segs.forEach(function (s) {
+      var segDays = listDays(s.from, s.to);
+      var t = sumPrice(s.p, segDays);
+      var fee = s.p.cleaningFee || 0;
+      h += "<div class='cline'>";
+      h += s.p.image ? "<img class='cthumb' src='" + s.p.image + "?w=200' alt='' loading='lazy' data-prop='" + s.p.id + "'>" : "<span class='cthumb'></span>";
+      h += "<div><span class='rname' data-prop='" + s.p.id + "' title='Voir le logement'>" + esc(s.p.code) + "</span>";
+      h += "<div class='rkind'>" + esc(s.p.kind) + "</div><div class='cdates'>" + datesTxt(s.from, s.to) + "</div></div>";
+      h += "<div class='cprice'>" + (t != null ? "<strong>" + Math.round(t + fee) + " €</strong>" + (fee ? "dont " + Math.round(fee) + " € de ménage" : "") : "") + "</div>";
+      if (s.p.bookingUrl) h += "<a class='book' href='" + s.p.bookingUrl + "' target='_blank' rel='noopener'>Réserver</a>";
+      h += "</div>";
+    });
+    var hasFee = c.segs.some(function (s) { return s.p.cleaningFee; });
+    h += "<div class='ctotal'><span>" + nightsTxt(nights) + " &middot; " + c.segs.length + " logements" + (hasFee ? " &middot; ménage inclus" : "") + "</span><span>Total séjour <strong>" + (c.total != null ? Math.round(c.total) + " €" : "&mdash;") + "</strong></span></div>";
+    if (c.minStayIssue) h += "<div class='note'>&#9888; Certaines étapes sont plus courtes que le séjour minimum habituel — contactez-nous, on s'arrange.</div>";
+    h += "</div>";
+    return h;
+  }
+
   function renderResults(a, dEnd) {
     var days = listDays(a, dEnd);
     var nights = days.length;
     var box = document.getElementById("results");
-    var html = "";
     var free = store.props.filter(function (p) { return nightsFree(p, days); });
     var combos = findCombos(a, dEnd).slice(0, free.length ? 2 : 3);
+    var totalOf = function (p) { var t = sumPrice(p, days); return t == null ? null : t + (p.cleaningFee || 0); };
+    free.sort(function (x, y) {
+      var tx = totalOf(x), ty = totalOf(y);
+      return (tx == null ? 1e9 : tx) - (ty == null ? 1e9 : ty);
+    });
 
-    html += "<div class='rescard'><div class='eyebrow'>Vos dates</div><h3>Du " + frDate(a) + " au " + frDate(dEnd) + " · " + nights + " nuit" + (nights > 1 ? "s" : "") + "</h3>";
-
-    if (free.length) {
-      html += "<div class='alttitle'>Proposition 1 &mdash; " + free.length + " logement" + (free.length > 1 ? "s" : "") + " disponible" + (free.length > 1 ? "s" : "") + " sur toute la période, sans changement de chambre :</div>";
-      free.forEach(function (p) {
-        var t = sumPrice(p, days);
-        var fee = p.cleaningFee || 0;
-        var ms = p.minStay || 1;
-        html += "<div class='combo'><div class='comboline'>";
-        html += "<span class='seg' data-prop='" + p.id + "' title='Voir le logement'>" + esc(p.code) + EYE + "</span>";
-        html += "<span class='segdet'>" + esc(p.kind) + (p.maxPeople ? " &middot; " + p.maxPeople + " pers." : "") + (t != null ? " &middot; <strong>" + Math.round(t + fee) + " €</strong>" + (fee ? " <small>(dont " + Math.round(fee) + " € ménage)</small>" : "") : "") + "</span>";
-        if (p.bookingUrl) html += "<a class='book' href='" + p.bookingUrl + "' target='_blank' rel='noopener'>Réserver</a>";
-        html += "</div>";
-        if (nights < ms) html += "<div class='note'>&#9888; Séjour minimum de " + ms + " nuits pour ce logement.</div>";
-        html += "</div>";
+    var shown = "", more = "", count = 0;
+    free.forEach(function (p, i) {
+      var ms = p.minStay || 1;
+      var card = roomCard(p, a, dEnd, {
+        badge: (i === 0 && free.length > 1 && totalOf(p) != null) ? "Meilleur prix" : "",
+        note: nights < ms ? "&#9888; Séjour minimum de " + ms + " nuits pour ce logement." : ""
       });
-    }
+      if (i < SHOWN) shown += card; else more += card;
+      count++;
+    });
+    if (free.length > SHOWN) more = "<div class='gtitle'>Autres logements disponibles sur toute la période</div>" + more;
 
     if (!free.length && !combos.length) {
-      html += "<p class='empty' style='margin-top:8px'>Désolé, aucun logement (même en combinant) ne peut couvrir ces dates.</p>";
+      shown += "<p class='empty'>Désolé, aucun logement (même en combinant) ne peut couvrir ces dates.</p>";
       var alts = findAlternatives(a, dEnd);
       if (alts.length) {
-        html += "<div class='alttitle'>Bonne nouvelle : à quelques jours près, c'est possible &#128071;</div>";
+        shown += "<div class='gtitle'>Bonne nouvelle : à quelques jours près, c'est possible &#128071;</div>";
         alts.forEach(function (al) {
-          html += "<div class='combo'><div class='comboline'>";
-          html += "<span class='seg' data-prop='" + al.p.id + "' title='Voir le logement'>" + esc(al.p.code) + EYE + " <small>" + frShort(al.a) + " &#8594; " + frShort(al.d) + "</small></span>";
-          html += "<span class='segdet'>" + (al.total != null ? "<strong>" + Math.round(al.total) + " €</strong> <small>(ménage inclus)</small>" : "") + (al.count > 1 ? " &middot; " + al.count + " logements dispo" : "") + "</span>";
-          html += "<a class='book' href='#' data-alta='" + al.a + "' data-altd='" + al.d + "'>Choisir ces dates</a>";
-          html += "</div></div>";
+          shown += roomCard(al.p, al.a, al.d, {
+            total: al.total, sub: "ménage inclus" + (al.count > 1 ? " &middot; " + al.count + " logements dispo" : ""),
+            action: "<a class='book' href='#' data-alta='" + al.a + "' data-altd='" + al.d + "'>Choisir ces dates</a>"
+          });
+          count++;
         });
       } else {
-        html += "<p class='empty'>Aucune disponibilité non plus à &plusmn;14 jours. Essayez une autre période ou une durée plus courte.</p>";
+        shown += "<p class='empty'>Aucune disponibilité non plus à &plusmn;14 jours. Essayez une autre période ou une durée plus courte.</p>";
       }
     }
     if (combos.length) {
-      html += "<div class='alttitle'>Proposition " + (free.length ? "2" : "1") + " &mdash; Combinaison de chambres, avec changement de logement en cours de séjour :</div>";
-      combos.forEach(function (c, ci) {
-        html += "<div class='combo'>";
-        if (combos.length > 1) html += "<div class='combotitle'>Option " + (ci + 1) + "</div>";
-        c.segs.forEach(function (s) {
-          var segDays = listDays(s.from, s.to);
-          var t = sumPrice(s.p, segDays);
-          var fee = s.p.cleaningFee || 0;
-          html += "<div class='comboline'>";
-          html += "<span class='seg' data-prop='" + s.p.id + "' title='" + esc(s.p.kind) + " — voir le logement'>" + esc(s.p.code) + EYE + " <small>" + frShort(s.from) + " &#8594; " + frShort(s.to) + "</small></span>";
-          html += "<span class='segdet'>" + segDays.length + " nuit" + (segDays.length > 1 ? "s" : "") + (t != null ? " &middot; <strong>" + Math.round(t + fee) + " €</strong>" + (fee ? " <small>(dont " + Math.round(fee) + " € ménage)</small>" : "") : "") + "</span>";
-          if (s.p.bookingUrl) html += "<a class='book' href='" + s.p.bookingUrl + "' target='_blank' rel='noopener'>Réserver</a>";
-          html += "</div>";
-        });
-        var hasFee = c.segs.some(function (s) { return s.p.cleaningFee; });
-        html += "<div class='combototal'>Total séjour : <strong>" + (c.total != null ? Math.round(c.total) + " €" : "&mdash;") + "</strong> &middot; " + nights + " nuit" + (nights > 1 ? "s" : "") + (hasFee ? " &middot; <small>frais de ménage inclus</small>" : "") + "</div>";
-        if (c.minStayIssue) html += "<div class='note'>&#9888; Certaines étapes sont plus courtes que le séjour minimum habituel — contactez-nous, on s'arrange.</div>";
-        html += "</div>";
-      });
-      html += "<div class='note'>Les dates indiquées vont de la nuit d'arrivée au jour de départ (changement de logement ce jour-là). Réservez chaque logement séparément pour couvrir tout votre séjour.</div>";
+      var ch = "<div class='gtitle'>Combinaison de logements, avec changement en cours de séjour</div>";
+      combos.forEach(function (c, ci) { ch += comboCard(c, ci, combos.length, nights); });
+      ch += "<div class='note'>Les dates indiquées vont de la nuit d'arrivée au jour de départ (changement de logement ce jour-là). Réservez chaque logement séparément pour couvrir tout votre séjour.</div>";
+      count += combos.length;
+      if (free.length) more += ch; else shown += ch;
     }
+
+    var html = "<div class='props'>";
+    html += "<div class='props-head'><svg width='26' height='26' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4.5' width='14' height='14' rx='2'/><path d='M3 9h14M7 2.5v4M13 2.5v4'/><circle cx='17.5' cy='17.5' r='4.5' fill='#fff'/><path d='M15.6 17.6l1.3 1.3 2.4-2.6'/></svg>";
+    html += "<h2>Nos propositions pour votre séjour</h2>";
+    if (count) html += "<span class='count'>" + count + " résultat" + (count > 1 ? "s" : "") + "</span>";
+    html += "</div>";
+    html += "<div class='props-dates'>Du <strong>" + frDate(a) + "</strong> au <strong>" + frDate(dEnd) + "</strong> &middot; " + nightsTxt(nights) + "</div>";
+    html += shown;
+    if (more) html += "<div id='more' hidden>" + more + "</div>";
+    var label = more ? "Voir les autres propositions" : "Voir le calendrier de tous les logements";
+    html += "<button type='button' class='morebtn' data-more='1' data-label='" + label + "'><span class='ml'>" + label + "</span>" + CHEV + "</button>";
     html += "</div>";
     box.innerHTML = html;
   }
+
+  // ---------- accordéons ----------
+  function calOpen() { return !document.getElementById("calbody").hidden; }
+  function setCal(open) {
+    document.getElementById("calbody").hidden = !open;
+    document.getElementById("caltoggle").setAttribute("aria-expanded", open ? "true" : "false");
+    document.getElementById("calacc").classList.toggle("open", open);
+  }
+  function toggleMore(btn) {
+    var opening = !btn.classList.contains("on");
+    var more = document.getElementById("more");
+    btn.classList.toggle("on", opening);
+    btn.querySelector(".ml").textContent = opening ? (more ? "Masquer les autres propositions" : "Masquer le calendrier") : btn.getAttribute("data-label");
+    if (more) more.hidden = !opening;
+    setCal(opening);
+    if (opening && !more) document.getElementById("calacc").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  document.getElementById("caltoggle").addEventListener("click", function () { setCal(!calOpen()); });
 
   // ---------- events ----------
   document.getElementById("go").addEventListener("click", function () {
@@ -602,8 +769,7 @@
     document.getElementById("din").value = "";
     document.getElementById("dout").value = "";
     pickA = ""; pickD = "";
-    var b = document.getElementById("drange");
-    if (b) b.textContent = "Choisir vos dates";
+    setRangeLabel("");
     this.style.display = "none";
     renderGrid();
   });
@@ -633,12 +799,17 @@
   var pickA = "", pickD = "";
   var pickMonth = todayStr().slice(0, 7);
   function daysInMonth(y, mo) { return new Date(Date.UTC(y, mo, 0)).getUTCDate(); }
+  function setRangeLabel(txt) {
+    var b = document.getElementById("drange");
+    if (!b) return;
+    document.getElementById("drangetxt").textContent = txt || "Choisir vos dates";
+    b.classList.toggle("ph", !txt);
+  }
   function setDates(a, d) {
     pickA = a; pickD = d;
     document.getElementById("din").value = a;
     document.getElementById("dout").value = d;
-    var b = document.getElementById("drange");
-    if (b) b.textContent = frShort(a) + " \u2192 " + frShort(d);
+    setRangeLabel(frShort(a) + " → " + frShort(d));
   }
   function togglePicker() {
     var el = document.getElementById("dpick");
@@ -750,11 +921,12 @@
   if (document.addEventListener) {
     document.addEventListener("click", function (e) {
       var t = e.target;
-      var el = t && t.closest ? t.closest("[data-prop],[data-gal],[data-close],[data-alta],[data-day],[data-pnav],[data-dtoggle]") : null;
+      var el = t && t.closest ? t.closest("[data-prop],[data-gal],[data-close],[data-alta],[data-day],[data-pnav],[data-dtoggle],[data-more]") : null;
       if (el) {
         if (el.getAttribute("data-day")) { handlePick(el.getAttribute("data-day")); return; }
         if (el.getAttribute("data-pnav")) { movePickMonth(parseInt(el.getAttribute("data-pnav"), 10)); return; }
         if (el.getAttribute("data-dtoggle")) { e.preventDefault(); togglePicker(); return; }
+        if (el.getAttribute("data-more")) { toggleMore(el); return; }
         if (el.getAttribute("data-alta")) {
           e.preventDefault();
           setDates(el.getAttribute("data-alta"), el.getAttribute("data-altd"));
@@ -775,26 +947,6 @@
       else if (e.key === "ArrowLeft") galShow(-1);
       else if (e.key === "ArrowRight") galShow(1);
     });
-  }
-
-  // ---------- visite guidée (masquable, mémorisée) ----------
-  var gt = document.getElementById("gtoggle");
-  if (gt) {
-    var guideHidden = false;
-    try { guideHidden = localStorage.getItem("coliverGuideHidden") === "1"; } catch (e) {}
-    var applyGuide = function () {
-      var st = document.getElementById("gsteps");
-      var lg = document.getElementById("glegend");
-      if (st) st.style.display = guideHidden ? "none" : "";
-      if (lg) lg.style.display = guideHidden ? "none" : "";
-      gt.textContent = guideHidden ? "Afficher" : "Masquer";
-    };
-    gt.addEventListener("click", function () {
-      guideHidden = !guideHidden;
-      try { localStorage.setItem("coliverGuideHidden", guideHidden ? "1" : "0"); } catch (e) {}
-      applyGuide();
-    });
-    applyGuide();
   }
 
   // premier chargement

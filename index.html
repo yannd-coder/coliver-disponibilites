@@ -96,8 +96,10 @@
   .rcard:hover { border-color: var(--bord-fort); box-shadow: var(--shadow); }
   .rimg { position: relative; background: var(--creme); cursor: pointer; min-height: 132px; }
   .rimg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
-  .rbadge { position: absolute; top: 10px; left: 10px; background: #6d3fd6; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 6px; }
+  .rbadges { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; align-items: flex-start; gap: 5px; }
+  .rbadge { background: #6d3fd6; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 6px; }
   .rbadge.shift { background: var(--jaune); color: var(--brun); }
+  .rbadge.confort { background: var(--vert-fonce); color: #fff; }
   .rbody { padding: 18px 20px; min-width: 0; }
   .rname { font-weight: 800; font-size: 18px; text-transform: uppercase; color: var(--brun); cursor: pointer; display: inline-block; }
   .rname:hover { color: var(--vert); }
@@ -263,7 +265,8 @@
     .props-dates { margin-left: 0; }
     .rcard { grid-template-columns: 112px minmax(0, 1fr); }
     .rimg { min-height: 0; }
-    .rbadge { top: 6px; left: 6px; font-size: 10px; padding: 3px 6px; }
+    .rbadges { top: 6px; left: 6px; gap: 4px; }
+    .rbadge { font-size: 10px; padding: 3px 6px; }
     .rbody { padding: 12px 14px; }
     .rname { font-size: 16px; }
     .rdates { margin-top: 8px; font-size: 12.5px; }
@@ -383,6 +386,8 @@
   var BASE = "https://flqjaqocsugwbkbiuhhk.supabase.co/functions/v1/lodgify-calendar";
   // Pages de réservation sur le site Lodgify (slug = nom complet du logement)
   var SITE = "https://coliver.lodgify.com/fr/";
+  // Logements mis en avant pour leur confort (tiny villas Coco et Litchi)
+  var CONFORT = { 607741: 1, 607745: 1 };
   // Demandes de réservation personnalisée (combinaison non réservable en ligne)
   var CONTACT_EMAIL = "mathias.coliver@gmail.com";
   // Tunnel de réservation Lodgify avec les dates déjà remplies (arrive à l'étape « Suppléments »)
@@ -682,7 +687,10 @@
     var h = "<div class='rcard'>";
     h += "<div class='rimg' data-prop='" + p.id + "' title='Voir le logement'>";
     if (p.image) h += "<img src='" + p.image + "?w=600' alt='" + esc(p.code) + "' loading='lazy'>";
-    if (opts.badge) h += "<span class='rbadge" + (opts.badgeCls ? " " + opts.badgeCls : "") + "'>" + opts.badge + "</span>";
+    var bdg = "";
+    if (opts.badge) bdg += "<span class='rbadge" + (opts.badgeCls ? " " + opts.badgeCls : "") + "'>" + opts.badge + "</span>";
+    if (CONFORT[p.id]) bdg += "<span class='rbadge confort'>Le plus confortable</span>";
+    if (bdg) h += "<span class='rbadges'>" + bdg + "</span>";
     h += "</div><div class='rbody'>";
     h += "<span class='rname' data-prop='" + p.id + "'>" + esc(p.code) + "</span>";
     h += "<div class='rkind'>" + kindTxt(p) + "</div>";

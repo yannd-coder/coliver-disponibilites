@@ -746,10 +746,10 @@
         note: nights < ms ? "&#9888; Séjour minimum de " + ms + " nuits pour ce logement." : ""
       }));
     });
+    var fc = "";
     if (fx.combos.length) {
-      var fc = "<div class='gtitle'>Ou en combinant plusieurs logements</div>";
+      fc = "<div class='gtitle'>Ou en combinant plusieurs logements</div>";
       fx.combos.forEach(function (o, ci) { fc += comboCard(o.c, ci, fx.combos.length, nights, offTxt(o.off)); });
-      fitems.push(fc);
     }
     count += fx.rooms.length + fx.combos.length;
     var fhead = "<div class='combohead flexhead'><svg width='30' height='30' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4.5' width='18' height='16.5' rx='2.5'/><path d='M3 9.5h18M8 2.5v4M16 2.5v4M7 15h10M7 15l2-2M7 15l2 2M17 15l-2-2M17 15l-2 2'/></svg><div><strong>Avec ta flexibilité (" + FLEX_LABEL[flex] + ")</strong><span class='sub'>D'autres dates proches des tiennes, pour la même durée de séjour.</span></div></div>";
@@ -758,11 +758,12 @@
       var wider = FLEX_STEPS[FLEX_STEPS.indexOf(flex) + 1];
       shown += "<div class='noresult'><span class='nrico'><svg width='30' height='30' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4.5' width='18' height='16.5' rx='2.5'/><path d='M3 9.5h18M8 2.5v4M16 2.5v4M9.5 13l5 5M14.5 13l-5 5'/></svg></span><div>";
       shown += "<strong>Aucun logement disponible sur ces dates</strong>";
-      shown += "<p>" + (fitems.length ? "Même en combinant plusieurs logements, tes dates exactes ne peuvent pas être couvertes. En les décalant un peu, c'est possible :" : "Même en combinant plusieurs logements, rien n'est libre sur ces dates" + (flex ? ", ni à " + FLEX_LABEL[flex] + " autour." : ".") + (wider ? " Élargis ta flexibilité ou essaie une autre période." : " Essaie une autre période ou une durée plus courte.")) + "</p>";
-      if (!fitems.length) shown += wider ? "<button type='button' class='redate' data-flex='" + wider + "'>Élargir à " + FLEX_LABEL[wider] + "</button>" : "<button type='button' class='redate' data-redate='1'>Modifier mes dates</button>";
+      shown += "<p>" + (fitems.length || fc ? "Même en combinant plusieurs logements, tes dates exactes ne peuvent pas être couvertes. En les décalant un peu, c'est possible :" : "Même en combinant plusieurs logements, rien n'est libre sur ces dates" + (flex ? ", ni à " + FLEX_LABEL[flex] + " autour." : ".") + (wider ? " Élargis ta flexibilité ou essaie une autre période." : " Essaie une autre période ou une durée plus courte.")) + "</p>";
+      if (!fitems.length && !fc) shown += wider ? "<button type='button' class='redate' data-flex='" + wider + "'>Élargir à " + FLEX_LABEL[wider] + "</button>" : "<button type='button' class='redate' data-redate='1'>Modifier mes dates</button>";
       shown += "</div></div>";
-      if (fitems.length) {
-        shown += fhead + fitems.slice(0, SHOWN).join("");
+      if (fitems.length || fc) {
+        // les combinaisons restent toujours visibles (jamais repliées)
+        shown += fhead + fitems.slice(0, SHOWN).join("") + fc;
         more += fitems.slice(SHOWN).join("");
       }
     }
@@ -771,9 +772,9 @@
       combos.forEach(function (c, ci) { ch += comboCard(c, ci, combos.length, nights); });
       ch += "<div class='note'>Les dates indiquées vont de la nuit d'arrivée au jour de départ (changement de logement ce jour-là). Réserve chaque logement séparément pour couvrir tout ton séjour.</div>";
       count += combos.length;
-      if (free.length) more += ch; else shown += ch;
+      shown += ch; // combinaisons toujours dépliées
     }
-    if (exact && fitems.length) more += fhead + fitems.join("");
+    if (exact && (fitems.length || fc)) more += fhead + fitems.join("") + fc;
 
     var html = "<div class='props'>";
     html += "<div class='props-head'><svg width='26' height='26' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4.5' width='14' height='14' rx='2'/><path d='M3 9h14M7 2.5v4M13 2.5v4'/><circle cx='17.5' cy='17.5' r='4.5' fill='#fff'/><path d='M15.6 17.6l1.3 1.3 2.4-2.6'/></svg>";

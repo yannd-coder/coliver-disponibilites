@@ -812,9 +812,9 @@
     html += "</div>";
     html += "<div class='props-dates'>Du <strong>" + frDate(a) + "</strong> au <strong>" + frDate(dEnd) + "</strong> &middot; " + nightsTxt(nights) + "</div>";
     html += shown;
-    if (more) html += "<div id='more' hidden>" + more + "</div>";
+    if (more) html += "<div id='more'>" + more + "</div>"; // autres propositions dépliées par défaut
     var label = more ? "Voir les autres propositions" : "Voir le calendrier de tous les logements";
-    html += "<button type='button' class='morebtn' data-more='1' data-label='" + label + "'><span class='ml'>" + label + "</span>" + CHEV + "</button>";
+    html += "<button type='button' class='morebtn" + (more ? " on" : "") + "' data-more='1' data-label='" + label + "'><span class='ml'>" + (more ? "Masquer les autres propositions" : label) + "</span>" + CHEV + "</button>";
     html += "</div>";
     box.innerHTML = html;
   }

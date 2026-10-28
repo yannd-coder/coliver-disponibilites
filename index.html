@@ -383,6 +383,10 @@
   var BASE = "https://flqjaqocsugwbkbiuhhk.supabase.co/functions/v1/lodgify-calendar";
   // Pages de réservation sur le site Lodgify (slug = nom complet du logement)
   var SITE = "https://coliver.lodgify.com/fr/";
+  // Tunnel de réservation Lodgify avec les dates déjà remplies (arrive à l'étape « Suppléments »)
+  function checkoutUrl(id, a, d) {
+    return "https://checkout.lodgify.com/fr/coliver/" + id + "/addons?currency=EUR&arrival=" + a + "&departure=" + d + "&adults=1";
+  }
   var BOOKING = {
     607741: SITE + "tiny-villa-coco--coliving-with-spa-pool-coworking",
     607742: SITE + "le-jungle-loft---villa-coliving-piscine-spa-coworking",
@@ -686,7 +690,7 @@
     else if (t != null) h += "<strong>" + Math.round(t + fee) + " €</strong>" + (fee ? "<small>dont " + Math.round(fee) + " € de ménage</small>" : "");
     h += "</div>";
     if (opts.action) h += opts.action;
-    else if (p.bookingUrl) h += "<a class='book' href='" + p.bookingUrl + "' target='_blank' rel='noopener'>Réserver</a>";
+    else h += "<a class='book' href='" + checkoutUrl(p.id, a, d) + "' target='_blank' rel='noopener'>Réserver</a>";
     h += "</div></div>";
     return h;
   }
@@ -704,7 +708,7 @@
       h += "<div><span class='rname' data-prop='" + s.p.id + "' title='Voir le logement'>" + esc(s.p.code) + "</span>";
       h += "<div class='rkind'>" + esc(s.p.kind) + "</div><div class='cdates'>" + datesTxt(s.from, s.to) + "</div></div>";
       h += "<div class='cprice'>" + (t != null ? "<strong>" + Math.round(t + fee) + " €</strong>" + (fee ? "dont " + Math.round(fee) + " € de ménage" : "") : "") + "</div>";
-      if (s.p.bookingUrl) h += "<a class='book' href='" + s.p.bookingUrl + "' target='_blank' rel='noopener'>Réserver</a>";
+      h += "<a class='book' href='" + checkoutUrl(s.p.id, s.from, s.to) + "' target='_blank' rel='noopener'>Réserver</a>";
       h += "</div>";
     });
     var hasFee = c.segs.some(function (s) { return s.p.cleaningFee; });

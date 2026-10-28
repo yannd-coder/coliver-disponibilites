@@ -53,6 +53,11 @@
   .sb-actions { display: flex; gap: 10px; align-items: center; margin-top: 10px; }
   .btn[hidden] { display: none; }
   .sbhint { flex: 1; font-size: 12.5px; color: var(--gris); }
+  .flexfield { margin-top: 16px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chipbtn { border: 1.5px solid var(--bord-fort); background: #fff; border-radius: 8px; padding: 9px 14px; font: 700 13.5px var(--font-body); color: var(--brun); cursor: pointer; transition: border-color .15s, background .15s; }
+  .chipbtn:hover { border-color: var(--vert); }
+  .chipbtn.on { background: var(--vert-fonce); border-color: var(--vert-fonce); color: #fff; }
   .btn { border: 0; border-radius: 6px; font: 800 14px var(--font-body); text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
   .btn-primary { flex: 1; background: var(--jaune); color: var(--brun); padding: 15px 22px; transition: background .15s; }
   .btn-primary:hover { background: var(--jaune-hover); }
@@ -93,6 +98,7 @@
   .rimg { position: relative; background: var(--creme); cursor: pointer; min-height: 132px; }
   .rimg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
   .rbadge { position: absolute; top: 10px; left: 10px; background: #6d3fd6; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 6px; }
+  .rbadge.shift { background: var(--jaune); color: var(--brun); }
   .rbody { padding: 18px 20px; min-width: 0; }
   .rname { font-weight: 800; font-size: 18px; text-transform: uppercase; color: var(--brun); cursor: pointer; display: inline-block; }
   .rname:hover { color: var(--vert); }
@@ -117,9 +123,11 @@
 
   /* combinaison */
   .combohead { display: flex; gap: 14px; align-items: center; background: var(--vert-fonce); color: #fff; border-radius: 12px; padding: 14px 18px; margin: 26px 0 4px; }
+  .combohead.flexhead { background: var(--creme); color: var(--vert-fonce); border: 1.5px solid var(--bord-fort); }
   .combohead strong { display: block; font-size: 15px; font-weight: 800; text-transform: uppercase; }
   .combohead .sub { display: block; font-size: 13px; opacity: .85; margin-top: 2px; }
   .ccard { background: #f1f7ed; border: 1.5px solid #cfe3c6; border-radius: 14px; margin-top: 12px; padding: 12px 14px 14px; }
+  .ctitle .shift { background: var(--jaune); color: var(--brun); border-radius: 5px; padding: 2px 7px; margin-right: 6px; }
   .ctitle { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--vert-fonce); margin: 2px 2px 10px; }
   .cline { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto auto; gap: 14px; align-items: center; padding: 10px 12px; background: #fff; border: 1px solid var(--bord); border-radius: 12px; }
   /* liaison entre deux logements : la réservation s'enchaîne */
@@ -264,6 +272,8 @@
     .clink { padding-left: 22px; }
     .clink::before { left: 36px; }
     .combohead { padding: 12px 14px; }
+    .chips { display: grid; grid-template-columns: 1fr 1fr; }
+    .chipbtn { padding: 9px 8px; font-size: 13px; }
     .noresult { flex-direction: column; align-items: flex-start; gap: 12px; padding: 16px; }
     .cline { grid-template-columns: 54px minmax(0, 1fr) auto; row-gap: 10px; column-gap: 12px; }
     .cline > div:not(.cprice) { grid-column: 2 / -1; }
@@ -298,27 +308,36 @@
   <section class="hero">
     <div>
       <div class="kicker">Outil de recherche &middot; Disponibilités</div>
-      <h1>Trouvez vos dates, <em>réservez.</em></h1>
-      <p class="lede">Les logements libres sur votre période — et quand aucun n'est disponible en continu, les combinaisons malines pour rester dans la villa en changeant simplement de chambre.</p>
+      <h1>Trouve tes dates, <em>réserve.</em></h1>
+      <p class="lede">Les logements libres sur ta période, ou à quelques jours près selon ta flexibilité — et quand aucun n'est disponible en continu, les combinaisons malines pour rester dans la villa en changeant simplement de logement.</p>
     </div>
     <div>
       <div class="searchbar">
         <div class="sb-main">
           <div class="field dfield">
             <label for="drange">Dates du séjour</label>
-            <button type="button" id="drange" class="dbtn ph" data-dtoggle="1"><span id="drangetxt">Choisir vos dates</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><path d="M9 15l2 2 4-4"/></svg></button>
+            <button type="button" id="drange" class="dbtn ph" data-dtoggle="1"><span id="drangetxt">Choisir tes dates</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><path d="M9 15l2 2 4-4"/></svg></button>
             <div id="dpick"></div>
             <input type="hidden" id="din"><input type="hidden" id="dout">
           </div>
+          <div class="field flexfield">
+            <label>Ta flexibilité</label>
+            <div class="chips" id="flexchips">
+              <button type="button" class="chipbtn on" data-flex="3">&plusmn; 3 jours</button>
+              <button type="button" class="chipbtn" data-flex="7">&plusmn; 1 semaine</button>
+              <button type="button" class="chipbtn" data-flex="30">&plusmn; 1 mois</button>
+              <button type="button" class="chipbtn" data-flex="90">&plusmn; 3 mois</button>
+            </div>
+          </div>
           <div class="sb-actions">
-            <span class="sbhint">Vos propositions s'affichent dès que vous choisissez votre date de départ.</span>
+            <span class="sbhint">Tes propositions s'affichent dès que tu choisis ta date de départ.</span>
             <button class="btn btn-primary" id="go" hidden>Trouver mon séjour <span aria-hidden="true">&rarr;</span></button>
             <button class="btn btn-ghost" id="clear" style="display:none">Effacer</button>
           </div>
         </div>
         <div class="sb-aside">
           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="14" height="14" rx="2"/><path d="M3 9h14M7 2.5v4M13 2.5v4"/><circle cx="17.5" cy="17.5" r="4.5" fill="#fff"/><path d="M15.6 17.6l1.3 1.3 2.4-2.6"/></svg>
-          <span>Notre outil explore les disponibilités des 9 logements de la villa et, si besoin, combine plusieurs chambres pour couvrir tout votre séjour.</span>
+          <span>Notre outil explore les disponibilités des 9 logements autour de tes dates et, si besoin, combine plusieurs logements pour couvrir tout ton séjour.</span>
         </div>
       </div>
       <div id="status"></div>
@@ -338,7 +357,7 @@
       <div class="legend">
         <span><span class="chip free"></span>Disponible (prix / nuit)</span>
         <span><span class="chip busy"></span>Occupé</span>
-        <span><span class="chip sel"></span>Vos dates</span>
+        <span><span class="chip sel"></span>Tes dates</span>
         <span><span class="chip none"></span>Non chargé</span>
       </div>
       <div class="gridnav">
@@ -352,10 +371,10 @@
   </section>
 
   <section class="infos" aria-label="Comment ça marche">
-    <div class="info"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg></span><div><strong>Choisissez vos dates</strong><p>Cliquez sur « Choisir vos dates », puis sélectionnez votre arrivée et votre départ dans le calendrier.</p></div></div>
-    <div class="info"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h11l-3-3M20 17H9l3 3"/></svg></span><div><strong>Découvrez nos propositions</strong><p>Les logements libres sur toute votre période s'affichent. Sinon, nous composons votre séjour en changeant de chambre — ou nous suggérons des dates proches.</p></div></div>
-    <div class="info"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5.5 4.5 12 4.5 22.5 12 22.5 12 18.5 19.5 12 19.5 1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3"/></svg></span><div><strong>Explorez les logements</strong><p>Cliquez sur une photo ou un nom pour ouvrir la fiche complète : photos, description, capacité.</p></div></div>
-    <div class="info"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10.5" rx="2"/><path d="M8 10.5V7a4 4 0 018 0v3.5"/></svg></span><div><strong>Réservez en ligne</strong><p>« Réserver » ouvre notre site de réservation sécurisé. Pour une combinaison, réservez chaque logement séparément.</p></div></div>
+    <div class="info"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg></span><div><strong>Choisis tes dates</strong><p>Clique sur « Choisir tes dates », sélectionne ton arrivée puis ton départ, et indique ta flexibilité.</p></div></div>
+    <div class="info"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h11l-3-3M20 17H9l3 3"/></svg></span><div><strong>Découvre nos propositions</strong><p>Les logements libres sur tes dates s'affichent, puis ceux à quelques jours près. Sinon, on compose ton séjour en changeant de logement en cours de route.</p></div></div>
+    <div class="info"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5.5 4.5 12 4.5 22.5 12 22.5 12 18.5 19.5 12 19.5 1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3"/></svg></span><div><strong>Explore les logements</strong><p>Clique sur une photo ou un nom pour ouvrir la fiche complète : photos, description, capacité.</p></div></div>
+    <div class="info"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10.5" rx="2"/><path d="M8 10.5V7a4 4 0 018 0v3.5"/></svg></span><div><strong>Réserve en ligne</strong><p>« Réserver » ouvre notre site de réservation sécurisé. Pour une combinaison, réserve chaque logement séparément.</p></div></div>
   </section>
 </div>
 <div id="pmodal"><div class="pmcard"><button class="pmclose" data-close="1" aria-label="Fermer">&times;</button><div id="pmbody"></div></div></div>
@@ -381,6 +400,7 @@
   var CHEV = "<svg viewBox='0 0 24 24' width='18' height='18' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>";
   var VISIBLE = 31;        // jours affichés dans la grille
   var SHOWN = 3;           // propositions visibles avant « Voir les autres propositions »
+  var searchSeq = 0;
   var store = { props: [], daysById: {} };
   var viewStart = todayStr();
   var selection = null;    // {a, d} dates ISO
@@ -428,33 +448,33 @@
     return true;
   }
 
-  function fetchRange(a, b, cb) {
-    setStatus("Chargement des disponibilités…");
-    fetch(BASE + "?data=1&start=" + a + "&end=" + b)
-      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
-      .then(function (js) {
-        if (js.error) throw new Error(js.error);
-        store.props = js.properties.map(function (p) {
-          return { id: p.id, kind: p.kind, code: p.code, minStay: p.minStay, cleaningFee: p.cleaningFee || 0, image: p.image || "", maxPeople: p.maxPeople || null, bookingUrl: BOOKING[p.id] || p.bookingUrl };
-        });
-        js.properties.forEach(function (p) {
-          if (!store.daysById[p.id]) store.daysById[p.id] = {};
-          var tgt = store.daysById[p.id];
-          for (var k in p.days) tgt[k] = p.days[k];
-        });
-        setStatus("");
-        cb();
-      })
-      .catch(function (e) {
-        setStatus("Impossible de charger les disponibilités (" + e.message + "). Réessayez dans un instant.", true);
-      });
+  var CHUNK = 180;         // jours par appel (limite serveur : 185)
+  function mergeData(js) {
+    if (js.error) throw new Error(js.error);
+    store.props = js.properties.map(function (p) {
+      return { id: p.id, kind: p.kind, code: p.code, minStay: p.minStay, cleaningFee: p.cleaningFee || 0, image: p.image || "", maxPeople: p.maxPeople || null, bookingUrl: BOOKING[p.id] || p.bookingUrl };
+    });
+    js.properties.forEach(function (p) {
+      if (!store.daysById[p.id]) store.daysById[p.id] = {};
+      var tgt = store.daysById[p.id];
+      for (var k in p.days) tgt[k] = p.days[k];
+    });
   }
 
   function ensure(a, b, cb) {
     if (haveRange(a, b)) { cb(); return; }
-    // marge pour limiter les allers-retours
-    var end = addDays(b, 15);
-    fetchRange(a, end, cb);
+    // marge pour limiter les allers-retours, puis découpage en tranches
+    var end = addDays(b, 15), parts = [], s = a;
+    while (s < end) { var e = addDays(s, CHUNK); if (e > end) e = end; parts.push([s, e]); s = e; }
+    setStatus(parts.length > 1 ? "Recherche des disponibilités autour de tes dates…" : "Chargement des disponibilités…");
+    Promise.all(parts.map(function (pt) {
+      return fetch(BASE + "?data=1&start=" + pt[0] + "&end=" + pt[1])
+        .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); });
+    }))
+      .then(function (list) { list.forEach(mergeData); setStatus(""); cb(); })
+      .catch(function (e) {
+        setStatus("Impossible de charger les disponibilités (" + e.message + "). Réessaie dans un instant.", true);
+      });
   }
 
   // ---------- grille ----------
@@ -607,32 +627,41 @@
     return out.slice(0, 3);
   }
 
-  // dates proches (même durée) quand rien n'est possible sur la période demandée
-  function findAlternatives(a, dEnd) {
+  // dates décalées (même durée) dans la marge de flexibilité : un logement n'apparaît
+  // qu'une fois, à la date la plus proche ; combinaisons seulement là où aucun logement seul n'est libre
+  function findFlexible(a, dEnd, flex, excludeIds) {
     var nights = listDays(a, dEnd).length;
     var t = todayStr();
-    var out = [];
-    for (var k = 1; k <= 14 && out.length < 3; k++) {
-      var offs = [k, -k];
-      for (var j = 0; j < offs.length && out.length < 3; j++) {
-        var a2 = addDays(a, offs[j]);
-        if (a2 < t) continue;
+    var seen = {}, rooms = [], combos = [];
+    (excludeIds || []).forEach(function (id) { seen[id] = 1; });
+    for (var k = 1; k <= flex; k++) {
+      [-k, k].forEach(function (off) {
+        var a2 = addDays(a, off);
+        if (a2 < t) return;
         var d2 = addDays(a2, nights);
-        if (!haveRange(a2, d2)) continue;
+        if (!haveRange(a2, d2)) return;
         var days2 = listDays(a2, d2);
-        var freeRooms = store.props.filter(function (p) { return nightsFree(p, days2); });
-        if (!freeRooms.length) continue;
-        var best = null, bestT = null;
-        freeRooms.forEach(function (p) {
-          var s = sumPrice(p, days2);
-          var tot = s != null ? s + (p.cleaningFee || 0) : null;
-          if (best == null || (tot != null && (bestT == null || tot < bestT))) { best = p; bestT = tot; }
+        var free2 = store.props.filter(function (p) { return nightsFree(p, days2); });
+        free2.forEach(function (p) {
+          if (seen[p.id]) return;
+          seen[p.id] = 1;
+          rooms.push({ p: p, a: a2, d: d2, off: off });
         });
-        out.push({ a: a2, d: d2, p: best, total: bestT, count: freeRooms.length });
-      }
+        if (!free2.length && combos.length < 2) {
+          var c = findCombos(a2, d2)[0];
+          if (c) combos.push({ c: c, a: a2, d: d2, off: off });
+        }
+      });
     }
-    return out;
+    return { rooms: rooms, combos: combos };
   }
+  function offTxt(off) {
+    var n = Math.abs(off);
+    return n + " jour" + (n > 1 ? "s" : "") + (off < 0 ? " plus tôt" : " plus tard");
+  }
+  var FLEX_LABEL = { 3: "&plusmn; 3 jours", 7: "&plusmn; 1 semaine", 30: "&plusmn; 1 mois", 90: "&plusmn; 3 mois" };
+  var FLEX_STEPS = [3, 7, 30, 90];
+  var flex = 3;
 
   // ---------- cartes de résultats ----------
   function kindTxt(p) { return esc(p.kind) + (p.maxPeople ? " &middot; " + (p.maxPeople > 1 ? "jusqu'à " : "") + p.maxPeople + " pers." : ""); }
@@ -645,7 +674,7 @@
     var h = "<div class='rcard'>";
     h += "<div class='rimg' data-prop='" + p.id + "' title='Voir le logement'>";
     if (p.image) h += "<img src='" + p.image + "?w=600' alt='" + esc(p.code) + "' loading='lazy'>";
-    if (opts.badge) h += "<span class='rbadge'>" + opts.badge + "</span>";
+    if (opts.badge) h += "<span class='rbadge" + (opts.badgeCls ? " " + opts.badgeCls : "") + "'>" + opts.badge + "</span>";
     h += "</div><div class='rbody'>";
     h += "<span class='rname' data-prop='" + p.id + "'>" + esc(p.code) + "</span>";
     h += "<div class='rkind'>" + kindTxt(p) + "</div>";
@@ -662,9 +691,9 @@
     return h;
   }
 
-  function comboCard(c, ci, count, nights) {
+  function comboCard(c, ci, count, nights, shift) {
     var h = "<div class='ccard'>";
-    h += "<div class='ctitle'>" + (count > 1 ? "Option " + (ci + 1) + " &middot; " : "") + c.segs.length + " logements enchaînés</div>";
+    h += "<div class='ctitle'>" + (shift ? "<span class='shift'>" + shift + "</span>" : (count > 1 ? "Option " + (ci + 1) + " &middot; " : "")) + c.segs.length + " logements enchaînés</div>";
     c.segs.forEach(function (s, si) {
       if (si > 0) h += "<div class='clink'><span class='plus' aria-hidden='true'><svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3.2' stroke-linecap='round'><path d='M12 5v14M5 12h14'/></svg></span><span>Puis, le " + frNum(s.from) + " : changement de logement</span></div>";
       var segDays = listDays(s.from, s.to);
@@ -680,7 +709,7 @@
     });
     var hasFee = c.segs.some(function (s) { return s.p.cleaningFee; });
     h += "<div class='ctotal'><span>" + nightsTxt(nights) + " &middot; " + c.segs.length + " logements" + (hasFee ? " &middot; ménage inclus" : "") + "</span><span>Total séjour <strong>" + (c.total != null ? Math.round(c.total) + " €" : "&mdash;") + "</strong></span></div>";
-    if (c.minStayIssue) h += "<div class='note'>&#9888; Certaines étapes sont plus courtes que le séjour minimum habituel — contactez-nous, on s'arrange.</div>";
+    if (c.minStayIssue) h += "<div class='note'>&#9888; Certaines étapes sont plus courtes que le séjour minimum habituel — contacte-nous, on s'arrange.</div>";
     h += "</div>";
     return h;
   }
@@ -709,35 +738,48 @@
     });
     if (free.length > SHOWN) more = "<div class='gtitle'>Autres logements disponibles sur toute la période</div>" + more;
 
-    if (!free.length && !combos.length) {
-      var alts = findAlternatives(a, dEnd);
+    var exact = free.length + combos.length;
+    var fx = findFlexible(a, dEnd, flex, free.map(function (p) { return p.id; }));
+    var fitems = [];
+    fx.rooms.forEach(function (o) {
+      var ms = o.p.minStay || 1;
+      fitems.push(roomCard(o.p, o.a, o.d, {
+        badge: offTxt(o.off), badgeCls: "shift",
+        note: nights < ms ? "&#9888; Séjour minimum de " + ms + " nuits pour ce logement." : ""
+      }));
+    });
+    if (fx.combos.length) {
+      var fc = "<div class='gtitle'>Ou en combinant plusieurs logements</div>";
+      fx.combos.forEach(function (o, ci) { fc += comboCard(o.c, ci, fx.combos.length, nights, offTxt(o.off)); });
+      fitems.push(fc);
+    }
+    count += fx.rooms.length + fx.combos.length;
+    var fhead = "<div class='combohead flexhead'><svg width='30' height='30' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4.5' width='18' height='16.5' rx='2.5'/><path d='M3 9.5h18M8 2.5v4M16 2.5v4M7 15h10M7 15l2-2M7 15l2 2M17 15l-2-2M17 15l-2 2'/></svg><div><strong>Avec ta flexibilité (" + FLEX_LABEL[flex] + ")</strong><span class='sub'>D'autres dates proches des tiennes, pour la même durée de séjour.</span></div></div>";
+
+    if (!exact) {
+      var wider = FLEX_STEPS[FLEX_STEPS.indexOf(flex) + 1];
       shown += "<div class='noresult'><span class='nrico'><svg width='30' height='30' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4.5' width='18' height='16.5' rx='2.5'/><path d='M3 9.5h18M8 2.5v4M16 2.5v4M9.5 13l5 5M14.5 13l-5 5'/></svg></span><div>";
       shown += "<strong>Aucun logement disponible sur ces dates</strong>";
-      shown += "<p>" + (alts.length ? "Même en combinant plusieurs logements, vos dates ne peuvent pas être couvertes." : "Même en combinant plusieurs logements, rien n'est libre sur ces dates, ni à &plusmn;14 jours autour. Essayez une autre période ou une durée plus courte.") + "</p>";
-      if (!alts.length) shown += "<button type='button' class='redate' data-redate='1'>Modifier mes dates</button>";
+      shown += "<p>" + (fitems.length ? "Même en combinant plusieurs logements, tes dates exactes ne peuvent pas être couvertes. En les décalant un peu, c'est possible :" : "Même en combinant plusieurs logements, rien n'est libre sur ces dates, ni à " + FLEX_LABEL[flex] + " autour." + (wider ? " Élargis ta flexibilité ou essaie une autre période." : " Essaie une autre période ou une durée plus courte.")) + "</p>";
+      if (!fitems.length) shown += wider ? "<button type='button' class='redate' data-flex='" + wider + "'>Élargir à " + FLEX_LABEL[wider] + "</button>" : "<button type='button' class='redate' data-redate='1'>Modifier mes dates</button>";
       shown += "</div></div>";
-      if (alts.length) {
-        shown += "<div class='gtitle'>Bonne nouvelle : à quelques jours près, c'est possible &#128071;</div>";
-        alts.forEach(function (al) {
-          shown += roomCard(al.p, al.a, al.d, {
-            total: al.total, sub: "ménage inclus" + (al.count > 1 ? " &middot; " + al.count + " logements dispo" : ""),
-            action: "<a class='book' href='#' data-alta='" + al.a + "' data-altd='" + al.d + "'>Choisir ces dates</a>"
-          });
-          count++;
-        });
+      if (fitems.length) {
+        shown += fhead + fitems.slice(0, SHOWN).join("");
+        more += fitems.slice(SHOWN).join("");
       }
     }
     if (combos.length) {
-      var ch = "<div class='combohead'><svg width='30' height='30' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M4 7h13l-3-3M20 17H7l3 3'/></svg><div><strong>Combinaison de logements</strong><span class='sub'>Restez à la villa sur toutes vos dates, en changeant de logement en cours de séjour.</span></div></div>";
+      var ch = "<div class='combohead'><svg width='30' height='30' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M4 7h13l-3-3M20 17H7l3 3'/></svg><div><strong>Combinaison de logements</strong><span class='sub'>Reste à la villa sur toutes tes dates, en changeant de logement en cours de séjour.</span></div></div>";
       combos.forEach(function (c, ci) { ch += comboCard(c, ci, combos.length, nights); });
-      ch += "<div class='note'>Les dates indiquées vont de la nuit d'arrivée au jour de départ (changement de logement ce jour-là). Réservez chaque logement séparément pour couvrir tout votre séjour.</div>";
+      ch += "<div class='note'>Les dates indiquées vont de la nuit d'arrivée au jour de départ (changement de logement ce jour-là). Réserve chaque logement séparément pour couvrir tout ton séjour.</div>";
       count += combos.length;
       if (free.length) more += ch; else shown += ch;
     }
+    if (exact && fitems.length) more += fhead + fitems.join("");
 
     var html = "<div class='props'>";
     html += "<div class='props-head'><svg width='26' height='26' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4.5' width='14' height='14' rx='2'/><path d='M3 9h14M7 2.5v4M13 2.5v4'/><circle cx='17.5' cy='17.5' r='4.5' fill='#fff'/><path d='M15.6 17.6l1.3 1.3 2.4-2.6'/></svg>";
-    html += "<h2>Nos propositions pour votre séjour</h2>";
+    html += "<h2>Nos propositions pour ton séjour</h2>";
     if (count) html += "<span class='count'>" + count + " résultat" + (count > 1 ? "s" : "") + "</span>";
     html += "</div>";
     html += "<div class='props-dates'>Du <strong>" + frDate(a) + "</strong> au <strong>" + frDate(dEnd) + "</strong> &middot; " + nightsTxt(nights) + "</div>";
@@ -747,6 +789,15 @@
     html += "<button type='button' class='morebtn' data-more='1' data-label='" + label + "'><span class='ml'>" + label + "</span>" + CHEV + "</button>";
     html += "</div>";
     box.innerHTML = html;
+  }
+
+  // ---------- flexibilité ----------
+  function setFlex(v) {
+    flex = v;
+    [].forEach.call(document.querySelectorAll("#flexchips .chipbtn"), function (b) {
+      b.classList.toggle("on", parseInt(b.getAttribute("data-flex"), 10) === v);
+    });
+    if (selection) document.getElementById("go").click();
   }
 
   // ---------- accordéons ----------
@@ -776,14 +827,16 @@
   document.getElementById("go").addEventListener("click", function () {
     var a = document.getElementById("din").value;
     var d = document.getElementById("dout").value;
-    if (!a || !d || d <= a) { setStatus("Choisissez une date d'arrivée puis une date de départ postérieure.", true); return; }
+    if (!a || !d || d <= a) { setStatus("Choisis une date d'arrivée puis une date de départ postérieure.", true); return; }
     var t = todayStr();
     if (a < t) { setStatus("La date d'arrivée est déjà passée.", true); return; }
     selection = { a: a, d: d };
     document.getElementById("clear").style.display = "";
-    var wideA = addDays(a, -14);
+    var wideA = addDays(a, -Math.max(flex, 14));
     if (wideA < t) wideA = t;
-    ensure(wideA, addDays(d, 14), function () {
+    var seq = ++searchSeq;
+    ensure(wideA, addDays(d, Math.max(flex, 14)), function () {
+      if (seq !== searchSeq) return;
       viewStart = a;
       renderGrid();
       renderResults(a, d);
@@ -828,7 +881,7 @@
   function setRangeLabel(txt) {
     var b = document.getElementById("drange");
     if (!b) return;
-    document.getElementById("drangetxt").textContent = txt || "Choisir vos dates";
+    document.getElementById("drangetxt").textContent = txt || "Choisir tes dates";
     b.classList.toggle("ph", !txt);
   }
   function setDates(a, d) {
@@ -885,7 +938,7 @@
       html += "<button type='button' class='" + cls + "' data-day='" + iso + "'>" + d + "</button>";
     }
     html += "</div>";
-    html += "<div class='phint'>" + ((!pickA || pickD) ? "Choisissez votre date d'arrivée" : "Choisissez maintenant votre date de départ") + "</div>";
+    html += "<div class='phint'>" + ((!pickA || pickD) ? "Choisis ta date d'arrivée" : "Choisis maintenant ta date de départ") + "</div>";
     el.innerHTML = html;
   }
 
@@ -947,7 +1000,7 @@
   if (document.addEventListener) {
     document.addEventListener("click", function (e) {
       var t = e.target;
-      var el = t && t.closest ? t.closest("[data-prop],[data-gal],[data-close],[data-alta],[data-day],[data-pnav],[data-dtoggle],[data-more],[data-redate]") : null;
+      var el = t && t.closest ? t.closest("[data-prop],[data-gal],[data-close],[data-day],[data-pnav],[data-dtoggle],[data-more],[data-redate],[data-flex]") : null;
       if (el) {
         if (el.getAttribute("data-day")) { handlePick(el.getAttribute("data-day")); return; }
         if (el.getAttribute("data-pnav")) { movePickMonth(parseInt(el.getAttribute("data-pnav"), 10)); return; }
@@ -958,12 +1011,7 @@
           if (document.getElementById("dpick").style.display !== "block") togglePicker();
           return;
         }
-        if (el.getAttribute("data-alta")) {
-          e.preventDefault();
-          setDates(el.getAttribute("data-alta"), el.getAttribute("data-altd"));
-          document.getElementById("go").click();
-          return;
-        }
+        if (el.getAttribute("data-flex")) { setFlex(parseInt(el.getAttribute("data-flex"), 10)); return; }
         if (el.getAttribute("data-prop")) { e.preventDefault(); openProp(parseInt(el.getAttribute("data-prop"), 10)); return; }
         if (el.getAttribute("data-gal")) { galShow(parseInt(el.getAttribute("data-gal"), 10)); return; }
         if (el.getAttribute("data-close")) { e.preventDefault(); closeProp(); return; }

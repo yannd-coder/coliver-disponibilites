@@ -108,7 +108,12 @@
   .book { display: inline-flex; align-items: center; justify-content: center; background: var(--jaune); color: var(--brun); border-radius: 6px; padding: 10px 22px; font-size: 12.5px; font-weight: 800; text-transform: uppercase; text-decoration: none; white-space: nowrap; transition: background .15s; margin-top: 10px; }
   .book:hover { background: var(--jaune-hover); }
   .note { font-size: 12.5px; color: var(--gris); margin-top: 10px; line-height: 1.5; }
-  .empty { font-size: 15px; color: var(--gris); line-height: 1.55; margin-top: 16px; }
+  .noresult { display: flex; gap: 18px; align-items: center; background: #fdf1ef; border: 1.5px solid var(--busy-bd); border-radius: 14px; padding: 18px 20px; margin-top: 16px; }
+  .noresult .nrico { width: 56px; height: 56px; border-radius: 999px; background: #fff; color: #c0392b; display: flex; align-items: center; justify-content: center; flex: none; box-shadow: 0 0 0 4px var(--busy); }
+  .noresult strong { display: block; font-size: 17px; font-weight: 800; color: var(--brun); }
+  .noresult p { font-size: 14px; color: var(--gris); line-height: 1.5; margin-top: 3px; }
+  .noresult .redate { margin-top: 10px; background: var(--vert-fonce); color: #fff; border: 0; border-radius: 6px; padding: 9px 16px; font: 800 12.5px var(--font-body); text-transform: uppercase; cursor: pointer; }
+  .noresult .redate:hover { background: var(--vert); }
 
   /* combinaison */
   .combohead { display: flex; gap: 14px; align-items: center; background: var(--vert-fonce); color: #fff; border-radius: 12px; padding: 14px 18px; margin: 26px 0 4px; }
@@ -259,6 +264,7 @@
     .clink { padding-left: 22px; }
     .clink::before { left: 36px; }
     .combohead { padding: 12px 14px; }
+    .noresult { flex-direction: column; align-items: flex-start; gap: 12px; padding: 16px; }
     .cline { grid-template-columns: 54px minmax(0, 1fr) auto; row-gap: 10px; column-gap: 12px; }
     .cline > div:not(.cprice) { grid-column: 2 / -1; }
     .cthumb { width: 54px; height: 42px; }
@@ -704,8 +710,12 @@
     if (free.length > SHOWN) more = "<div class='gtitle'>Autres logements disponibles sur toute la période</div>" + more;
 
     if (!free.length && !combos.length) {
-      shown += "<p class='empty'>Désolé, aucun logement (même en combinant) ne peut couvrir ces dates.</p>";
       var alts = findAlternatives(a, dEnd);
+      shown += "<div class='noresult'><span class='nrico'><svg width='30' height='30' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4.5' width='18' height='16.5' rx='2.5'/><path d='M3 9.5h18M8 2.5v4M16 2.5v4M9.5 13l5 5M14.5 13l-5 5'/></svg></span><div>";
+      shown += "<strong>Aucun logement disponible sur ces dates</strong>";
+      shown += "<p>" + (alts.length ? "Même en combinant plusieurs logements, vos dates ne peuvent pas être couvertes." : "Même en combinant plusieurs logements, rien n'est libre sur ces dates, ni à &plusmn;14 jours autour. Essayez une autre période ou une durée plus courte.") + "</p>";
+      if (!alts.length) shown += "<button type='button' class='redate' data-redate='1'>Modifier mes dates</button>";
+      shown += "</div></div>";
       if (alts.length) {
         shown += "<div class='gtitle'>Bonne nouvelle : à quelques jours près, c'est possible &#128071;</div>";
         alts.forEach(function (al) {
@@ -715,8 +725,6 @@
           });
           count++;
         });
-      } else {
-        shown += "<p class='empty'>Aucune disponibilité non plus à &plusmn;14 jours. Essayez une autre période ou une durée plus courte.</p>";
       }
     }
     if (combos.length) {
@@ -939,12 +947,17 @@
   if (document.addEventListener) {
     document.addEventListener("click", function (e) {
       var t = e.target;
-      var el = t && t.closest ? t.closest("[data-prop],[data-gal],[data-close],[data-alta],[data-day],[data-pnav],[data-dtoggle],[data-more]") : null;
+      var el = t && t.closest ? t.closest("[data-prop],[data-gal],[data-close],[data-alta],[data-day],[data-pnav],[data-dtoggle],[data-more],[data-redate]") : null;
       if (el) {
         if (el.getAttribute("data-day")) { handlePick(el.getAttribute("data-day")); return; }
         if (el.getAttribute("data-pnav")) { movePickMonth(parseInt(el.getAttribute("data-pnav"), 10)); return; }
         if (el.getAttribute("data-dtoggle")) { e.preventDefault(); togglePicker(); return; }
         if (el.getAttribute("data-more")) { toggleMore(el); return; }
+        if (el.getAttribute("data-redate")) {
+          document.querySelector(".searchbar").scrollIntoView({ behavior: "smooth", block: "center" });
+          if (document.getElementById("dpick").style.display !== "block") togglePicker();
+          return;
+        }
         if (el.getAttribute("data-alta")) {
           e.preventDefault();
           setDates(el.getAttribute("data-alta"), el.getAttribute("data-altd"));

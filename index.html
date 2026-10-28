@@ -32,10 +32,8 @@
   /* en-tête */
   header.top { background: #fff; border-bottom: 1px solid var(--bord); }
   .top-in { max-width: 1160px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  .brand { text-decoration: none; color: var(--vert-fonce); display: flex; flex-direction: column; line-height: 1; }
-  .brand b { font-family: var(--font-display); font-weight: 400; font-size: 30px; letter-spacing: -.01em; }
-  .brand b span { color: var(--jaune); }
-  .brand small { font-size: 9.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--brun); margin-top: 3px; }
+  .brand { display: block; line-height: 0; }
+  .brand img { height: 56px; width: auto; display: block; }
   .toplink { font-size: 12.5px; font-weight: 700; text-transform: uppercase; text-decoration: none; color: #fff; background: var(--vert-fonce); padding: 10px 16px; border-radius: 4px; white-space: nowrap; }
   .toplink:hover { background: var(--vert); }
 
@@ -52,11 +50,13 @@
   .dbtn:hover, .dbtn:focus-visible { border-color: var(--vert); outline: none; }
   .dbtn.ph { color: var(--gris-clair); }
   .dbtn svg { color: var(--vert-fonce); }
-  .sb-actions { display: flex; gap: 10px; align-items: center; margin-top: 16px; }
+  .sb-actions { display: flex; gap: 10px; align-items: center; margin-top: 10px; }
+  .btn[hidden] { display: none; }
+  .sbhint { flex: 1; font-size: 12.5px; color: var(--gris); }
   .btn { border: 0; border-radius: 6px; font: 800 14px var(--font-body); text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
   .btn-primary { flex: 1; background: var(--jaune); color: var(--brun); padding: 15px 22px; transition: background .15s; }
   .btn-primary:hover { background: var(--jaune-hover); }
-  .btn-ghost { background: transparent; color: var(--gris); text-decoration: underline; text-transform: none; font-weight: 600; font-size: 13px; padding: 12px 6px; }
+  .btn-ghost { background: transparent; color: var(--gris); text-decoration: underline; text-transform: none; font-weight: 600; font-size: 13px; padding: 4px 2px; }
   .sb-aside { background: var(--creme-clair); border: 1px solid var(--bord); border-radius: 12px; padding: 16px 14px; font-size: 12.5px; color: var(--gris); line-height: 1.55; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
   .sb-aside svg { color: var(--vert-fonce); }
   #status { font-size: 13px; color: var(--gris); margin: 12px 2px 0; min-height: 0; }
@@ -111,9 +111,16 @@
   .empty { font-size: 15px; color: var(--gris); line-height: 1.55; margin-top: 16px; }
 
   /* combinaison */
-  .ccard { border: 1px solid var(--bord); border-radius: 14px; margin-top: 12px; padding: 6px 18px 14px; }
-  .ctitle { font-size: 11.5px; font-weight: 800; text-transform: uppercase; color: var(--gris-clair); margin: 10px 0 2px; }
-  .cline { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto auto; gap: 14px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--bord); }
+  .combohead { display: flex; gap: 14px; align-items: center; background: var(--vert-fonce); color: #fff; border-radius: 12px; padding: 14px 18px; margin: 26px 0 4px; }
+  .combohead strong { display: block; font-size: 15px; font-weight: 800; text-transform: uppercase; }
+  .combohead .sub { display: block; font-size: 13px; opacity: .85; margin-top: 2px; }
+  .ccard { background: #f1f7ed; border: 1.5px solid #cfe3c6; border-radius: 14px; margin-top: 12px; padding: 12px 14px 14px; }
+  .ctitle { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--vert-fonce); margin: 2px 2px 10px; }
+  .cline { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto auto; gap: 14px; align-items: center; padding: 10px 12px; background: #fff; border: 1px solid var(--bord); border-radius: 12px; }
+  /* liaison entre deux logements : la réservation s'enchaîne */
+  .clink { position: relative; display: flex; align-items: center; gap: 12px; padding: 6px 0 6px 29px; font-size: 12.5px; font-weight: 700; color: var(--vert-fonce); }
+  .clink::before { content: ""; position: absolute; left: 43px; top: 0; bottom: 0; border-left: 2px dashed #8fbf7e; }
+  .clink .plus { position: relative; width: 30px; height: 30px; border-radius: 999px; background: var(--jaune); color: var(--brun); font-size: 20px; font-weight: 800; line-height: 1; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 4px #f1f7ed; flex: none; }
   .cthumb { width: 64px; height: 48px; border-radius: 8px; object-fit: cover; cursor: pointer; background: var(--creme); display: block; }
   .cline .rname { font-size: 15px; }
   .cline .rkind { font-size: 12.5px; }
@@ -121,7 +128,7 @@
   .cprice strong { display: block; font-size: 17px; font-weight: 800; color: var(--brun); }
   .cline .book { margin-top: 0; padding: 9px 16px; }
   .cdates { font-size: 12.5px; color: var(--brun); margin-top: 2px; }
-  .ctotal { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding-top: 12px; font-size: 13px; color: var(--gris); flex-wrap: wrap; }
+  .ctotal { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 12px 4px 0; font-size: 13px; color: var(--gris); flex-wrap: wrap; }
   .ctotal strong { font-size: 22px; font-weight: 800; color: var(--brun); margin-left: 6px; }
 
   /* « voir les autres propositions » */
@@ -227,7 +234,7 @@
   @media (max-width: 640px) {
     .wrap { padding: 0 16px; }
     .top-in { padding: 10px 16px; }
-    .brand b { font-size: 25px; }
+    .brand img { height: 44px; }
     .toplink { padding: 8px 11px; font-size: 11px; }
     .hero h1 { font-size: 34px; }
     .lede { font-size: 14.5px; }
@@ -247,7 +254,11 @@
     .rprice { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--bord); flex-direction: row; justify-content: space-between; text-align: left; padding: 12px 14px; gap: 10px; }
     .rprice .pt { align-items: flex-start; gap: 3px; }
     .rprice .book { margin-top: 0; }
-    .ccard { padding: 4px 12px 12px; }
+    .ccard { padding: 10px 10px 12px; }
+    .cline { padding: 10px; }
+    .clink { padding-left: 22px; }
+    .clink::before { left: 36px; }
+    .combohead { padding: 12px 14px; }
     .cline { grid-template-columns: 54px minmax(0, 1fr) auto; row-gap: 10px; column-gap: 12px; }
     .cline > div:not(.cprice) { grid-column: 2 / -1; }
     .cthumb { width: 54px; height: 42px; }
@@ -273,7 +284,7 @@
 <body>
 <header class="top">
   <div class="top-in">
-    <a class="brand" href="https://coliver.re/"><b>coliver<span>&#127796;</span></b><small>Coliving &amp; coworking</small></a>
+    <a class="brand" href="https://coliver.re/"><img src="logo.png" alt="Coliver, coliving tropical" width="932" height="348"></a>
     <a class="toplink" href="https://coliver.re/sejourner/">&larr; Retour au site</a>
   </div>
 </header>
@@ -281,7 +292,7 @@
   <section class="hero">
     <div>
       <div class="kicker">Outil de recherche &middot; Disponibilités</div>
-      <h1>Trouvez vos dates, <em style="white-space:nowrap">réservez.&nbsp;&#127796;</em></h1>
+      <h1>Trouvez vos dates, <em>réservez.</em></h1>
       <p class="lede">Les logements libres sur votre période — et quand aucun n'est disponible en continu, les combinaisons malines pour rester dans la villa en changeant simplement de chambre.</p>
     </div>
     <div>
@@ -294,7 +305,8 @@
             <input type="hidden" id="din"><input type="hidden" id="dout">
           </div>
           <div class="sb-actions">
-            <button class="btn btn-primary" id="go">Trouver mon séjour <span aria-hidden="true">&rarr;</span></button>
+            <span class="sbhint">Vos propositions s'affichent dès que vous choisissez votre date de départ.</span>
+            <button class="btn btn-primary" id="go" hidden>Trouver mon séjour <span aria-hidden="true">&rarr;</span></button>
             <button class="btn btn-ghost" id="clear" style="display:none">Effacer</button>
           </div>
         </div>
@@ -646,8 +658,9 @@
 
   function comboCard(c, ci, count, nights) {
     var h = "<div class='ccard'>";
-    if (count > 1) h += "<div class='ctitle'>Option " + (ci + 1) + "</div>";
-    c.segs.forEach(function (s) {
+    h += "<div class='ctitle'>" + (count > 1 ? "Option " + (ci + 1) + " &middot; " : "") + c.segs.length + " logements enchaînés</div>";
+    c.segs.forEach(function (s, si) {
+      if (si > 0) h += "<div class='clink'><span class='plus' aria-hidden='true'><svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3.2' stroke-linecap='round'><path d='M12 5v14M5 12h14'/></svg></span><span>Puis, le " + frNum(s.from) + " : changement de logement</span></div>";
       var segDays = listDays(s.from, s.to);
       var t = sumPrice(s.p, segDays);
       var fee = s.p.cleaningFee || 0;
@@ -707,7 +720,7 @@
       }
     }
     if (combos.length) {
-      var ch = "<div class='gtitle'>Combinaison de logements, avec changement en cours de séjour</div>";
+      var ch = "<div class='combohead'><svg width='30' height='30' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M4 7h13l-3-3M20 17H7l3 3'/></svg><div><strong>Combinaison de logements</strong><span class='sub'>Restez à la villa sur toutes vos dates, en changeant de logement en cours de séjour.</span></div></div>";
       combos.forEach(function (c, ci) { ch += comboCard(c, ci, combos.length, nights); });
       ch += "<div class='note'>Les dates indiquées vont de la nuit d'arrivée au jour de départ (changement de logement ce jour-là). Réservez chaque logement séparément pour couvrir tout votre séjour.</div>";
       count += combos.length;
